@@ -30,6 +30,7 @@ body{
 
   position: fixed;
   top: 48%;
+  left: 0px;
 }
 
 .arrow-right {
@@ -59,4 +60,12 @@ body{
 
 .slider:hover{
   border: 1px solid white;
+}
+
+.menu{
+  position: fixed;
+  top: 65px;
+  left: -39px;
+  height: 100%;
+  border: 1px solid #fff;
 }
