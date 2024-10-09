@@ -5,8 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>cO(alg)</title>
-  <link href="css/style.css" rel="stylesheet">
-  <script src="scripts/script.js"></script>
+
+  <link href="/css/style.css" rel="stylesheet">
+  <script src="/scripts/script.js"></script>
+
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
 <body>
@@ -14,7 +17,7 @@
     <h3>cOalg</h3>
   </div>
 
-  <div class="menu" id="menu">
+  <div class="menu" id="menu" hx-post='/load-menu' hx-trigger='load' hx-swap='outerHTML'>
     <div>
       aoeu
     </div>
