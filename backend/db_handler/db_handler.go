@@ -107,3 +107,19 @@ func Get_Chapters(db *sql.DB) []string {
 	}
 	return clmn
 }
+
+func Get_Lessons(db *sql.DB, id_cap int) []string {
+	var clmn []string
+	row_num := Last_id(db, "pagina", "id_pag")
+
+	for i := 0; i < row_num; i++ {
+		var ans string
+		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + ";"
+		row := db.QueryRow(stmt)
+		row.Scan(&ans)
+		if ans != "" {
+			clmn = append(clmn, ans)
+		}
+	}
+	return clmn
+}

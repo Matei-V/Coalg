@@ -7,7 +7,24 @@
   <title>cO(alg)</title>
 
   <link href="/css/style.css" rel="stylesheet">
-  <script src="/scripts/script.js"></script>
+  <script>
+    var menu_tog = false;
+
+    function show_menu() {
+      var menu_width = document.getElementById("menu").offsetWidth;
+      console.log(menu_width);
+      if (menu_tog === false) {
+        document.getElementById("menu").style.left = "0px";
+        document.getElementById("slider").style.left = menu_width.toString() + "px";
+        document.getElementById("main").style.left = (menu_width + 30).toString() + "px";
+      } else {
+        document.getElementById("menu").style.left = "-" + menu_width.toString() + "px";
+        document.getElementById("slider").style.left = "0px";
+        document.getElementById("main").style.left = "30px";
+      }
+      menu_tog = !menu_tog;
+    }
+  </script>
 
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
@@ -27,9 +44,14 @@
     </div>
   </div>
 
-  <div class="main">
+  <div class="main" id="main" style="position:relative; left:240px">
     <div class="separator"></div>
 
+    <h1>aaaa aoeuao aoeu</h1>
+    <h1>aaaa aoeuao aoeu</h1>
+    <h1>aaaa aoeuao aoeu</h1>
+    <h1>aaaa aoeuao aoeu</h1>
+    <h1>aaaa aoeuao aoeu</h1>
   </div>
 
   <div class="footer">

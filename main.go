@@ -25,6 +25,18 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 }
+func exePageadd(w http.ResponseWriter, r *http.Request) {
+	var filename = "add_page.html"
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = t.ExecuteTemplate(w, filename, nil)
+	if err != nil {
+		panic(err.Error())
+	}
+}
 
 func add_FileSystem() {
 	fs := http.FileServer(http.Dir("template/css"))
@@ -35,11 +47,12 @@ func add_FileSystem() {
 
 func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
-	http.HandleFunc("/get-chapters", api.Write_chapters)
+	http.HandleFunc("/get-menu", api.Write_menu)
+	http.HandleFunc("/add-page", exePageadd)
 }
 
 func main() {
-	add_FileSystem()
+	//add_FileSystem()
 	add_ApiHandlers()
 
 	http.HandleFunc("/", exeIndex)
