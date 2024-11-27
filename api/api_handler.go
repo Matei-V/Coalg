@@ -19,11 +19,11 @@ func Load_menu(w http.ResponseWriter, r *http.Request) {
 func Write_menu(w http.ResponseWriter, r *http.Request) {
 	caps := dbh.Get_Chapters(db)
 	htmlStr := "<ul class='chapters'>\n"
-	for i := 0; i < len(caps); i++ {
+	for i := 1; i < len(caps); i++ {
 		htmlStr += "<li>" + caps[i] + "<ul>"
-		less := dbh.Get_Lessons(db, i)
+		less := dbh.Get_Lessons(db, i+1)
 		for j := 0; j < len(less); j++ {
-			htmlStr += "<li>" + less[j] + "</li>"
+			htmlStr += "<li htmx-post='/" + less[j] + "'>" + less[j] + "</li>"
 		}
 		htmlStr += "</ul></li>"
 	}
@@ -32,4 +32,8 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
 	tmpl.Execute(w, nil)
+}
+
+func Load_lesson(w http.ResponseWriter, r *http.Request) {
+
 }

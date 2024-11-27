@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	api "mysql_drive/api"
 	dbh "mysql_drive/backend/db_handler"
@@ -38,6 +39,14 @@ func exePageadd(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func addPage(w http.ResponseWriter, r *http.Request) {
+	id_unitate, _ := strconv.Atoi(r.PostFormValue("unitate"))
+	u := dbh.Create_unit(id_unitate)
+	cap := dbh.Create_chap(dbh.Last_id(db, "capitol", "id_cap")+1, r.PostFormValue("capitol"))
+	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"))
+	dbh.Add_page(db, u, cap, true, pag, true)
+}
+
 func add_FileSystem() {
 	fs := http.FileServer(http.Dir("template/css"))
 	http.Handle("/css/", http.StripPrefix("/css/", fs))
@@ -49,12 +58,14 @@ func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
 	http.HandleFunc("/get-menu", api.Write_menu)
 	http.HandleFunc("/add-page", exePageadd)
+	http.HandleFunc("/add_new_page", addPage)
+	http.HandleFunc("/load-lesson", api.Load_lesson)
 }
 
 func main() {
-	//add_FileSystem()
+	add_FileSystem()
 	add_ApiHandlers()
 
 	http.HandleFunc("/", exeIndex)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8000", nil)
 }

@@ -46,10 +46,27 @@
 
   <div class="main" id="main" style="position:relative; left:240px">
     <div class="separator"></div>
-    <form>
+    <form hx-post="/add_new_page">
+      <select name="unitate">
+        <option value="9">Clasa a 9-a</option>
+        <option value="10">Clasa a 10-a</option>
+        <option value="11">Clasa a 11-a</option>
+        <option value="12">Clasa a 12-a</option>
+      </select>
+      <br>
+      <input type="text" name="capitol" placeholder="Capitol" id="input">
+      <br>
       <input type="text" name="titlu" placeholder="Titlu" id="input">
+      <br>
+      <input type="text" name="resurse" placeholder="Resurse" id="input">
+      <br>
+      <input type="text" name="descriere" placeholder="Descriere" id="input">
+      <br>
+      <input type="text" name="problema" placeholder="problema" id="input">
+      <br>
+      <input type="submit" value="Submit">
     </form>
-    
+
   </div>
 
   <div class="footer">

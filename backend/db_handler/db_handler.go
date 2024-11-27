@@ -35,9 +35,9 @@ type prob struct {
 	limba string
 }
 
-func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool, r []res, pb []prob) {
+func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool /*, r []res, pb []prob*/) {
 	if insert_chap {
-		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", p.titlu, u.id_unit)
+		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", c.titlu, u.id_unit)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -50,22 +50,23 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 		}
 		defer insert.Close()
 	}
-	for i := 0; i < len(r); i++ {
-		insert, err := db.Query("insert into resursa(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
-			r[i].titlu, r[i].link, r[i].limba, p.id_pag)
-		if err != nil {
-			panic(err.Error())
+	/*
+		for i := 0; i < len(r); i++ {
+			insert, err := db.Query("insert into resursa(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
+				r[i].titlu, r[i].link, r[i].limba, p.id_pag)
+			if err != nil {
+				panic(err.Error())
+			}
+			defer insert.Close()
 		}
-		defer insert.Close()
-	}
-	for i := 0; i < len(pb); i++ {
-		insert, err := db.Query("insert into problema(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
-			pb[i].titlu, pb[i].link, pb[i].limba, p.id_pag)
-		if err != nil {
-			panic(err.Error())
-		}
-		defer insert.Close()
-	}
+		for i := 0; i < len(pb); i++ {
+			insert, err := db.Query("insert into problema(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
+				pb[i].titlu, pb[i].link, pb[i].limba, p.id_pag)
+			if err != nil {
+				panic(err.Error())
+			}
+			defer insert.Close()
+		}*/
 }
 
 func Last_id(db *sql.DB, table string, id_type string) int {
@@ -122,4 +123,23 @@ func Get_Lessons(db *sql.DB, id_cap int) []string {
 		}
 	}
 	return clmn
+}
+
+func Create_chap(id_cap int, titlu string) chap {
+	var ans chap
+	ans.id_cap = id_cap
+	ans.titlu = titlu
+	return ans
+}
+
+func Create_unit(id_unit int) unit {
+	var ans unit
+	ans.id_unit = id_unit
+	return ans
+}
+func Create_pag(id_pag int, titlu string) pag {
+	var ans pag
+	ans.id_pag = id_pag
+	ans.titlu = titlu
+	return ans
 }
