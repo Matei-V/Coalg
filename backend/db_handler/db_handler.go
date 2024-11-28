@@ -12,13 +12,15 @@ type unit struct {
 }
 
 type chap struct {
-	id_cap int
-	titlu  string
+	id_cap    int
+	titlu     string
+	descriere string
 }
 
 type pag struct {
-	id_pag int
-	titlu  string
+	id_pag    int
+	titlu     string
+	descriere string
 }
 
 type res struct {
@@ -44,7 +46,7 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 		defer insert.Close()
 	}
 	if insert_pag {
-		insert, err := db.Query("insert into pagina(titlu, id_cap) values(?, ?)", p.titlu, c.id_cap)
+		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere) values(?, ?, ?)", p.titlu, c.id_cap, p.descriere)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -112,7 +114,7 @@ func Get_Chapters(db *sql.DB) []string {
 func Get_Lessons(db *sql.DB, id_cap int) []string {
 	var clmn []string
 	row_num := Last_id(db, "pagina", "id_pag")
-
+	fmt.Printf(strconv.Itoa(id_cap))
 	for i := 0; i < row_num; i++ {
 		var ans string
 		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + ";"
@@ -137,9 +139,20 @@ func Create_unit(id_unit int) unit {
 	ans.id_unit = id_unit
 	return ans
 }
-func Create_pag(id_pag int, titlu string) pag {
+func Create_pag(id_pag int, titlu string, descriere string) pag {
 	var ans pag
 	ans.id_pag = id_pag
 	ans.titlu = titlu
+	ans.descriere = descriere
+	return ans
+}
+
+func Get_pag(db *sql.DB, titlu string) string {
+	var ans string
+
+	stmt := "select descriere from pagina where titlu='" + titlu + "';"
+	fmt.Printf(stmt + "\n")
+	row := db.QueryRow(stmt)
+	row.Scan(&ans)
 	return ans
 }

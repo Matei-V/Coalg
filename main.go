@@ -43,7 +43,7 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	id_unitate, _ := strconv.Atoi(r.PostFormValue("unitate"))
 	u := dbh.Create_unit(id_unitate)
 	cap := dbh.Create_chap(dbh.Last_id(db, "capitol", "id_cap")+1, r.PostFormValue("capitol"))
-	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"))
+	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"), r.PostFormValue("descriere"))
 	dbh.Add_page(db, u, cap, true, pag, true)
 }
 
