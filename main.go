@@ -42,9 +42,25 @@ func exePageadd(w http.ResponseWriter, r *http.Request) {
 func addPage(w http.ResponseWriter, r *http.Request) {
 	id_unitate, _ := strconv.Atoi(r.PostFormValue("unitate"))
 	u := dbh.Create_unit(id_unitate)
+
+	add_cap, _ := strconv.ParseBool(r.PostFormValue("add-cap"))
 	cap := dbh.Create_chap(dbh.Last_id(db, "capitol", "id_cap")+1, r.PostFormValue("capitol"))
 	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"), r.PostFormValue("descriere"))
-	dbh.Add_page(db, u, cap, true, pag, true)
+
+	if !add_cap {
+		str := r.PostFormValue("capitol")
+		var idx int
+		for i := 0; i < len(str); i++ {
+			_, err := strconv.Atoi(str[i : i+1])
+			if err == nil {
+				aux, _ := strconv.Atoi(str[i : i+1])
+				idx = idx*10 + aux
+			}
+		}
+		cap = dbh.Create_chap(idx, str[1:])
+	}
+
+	dbh.Add_page(db, u, cap, add_cap, pag, true)
 }
 
 func add_FileSystem() {
@@ -60,6 +76,7 @@ func add_ApiHandlers() {
 	http.HandleFunc("/add-page", exePageadd)
 	http.HandleFunc("/add_new_page", addPage)
 	http.HandleFunc("/load-lesson", api.Load_lesson)
+	http.HandleFunc("/load-chapters", api.Load_chapters)
 }
 
 func main() {

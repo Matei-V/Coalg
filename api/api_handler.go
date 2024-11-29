@@ -2,9 +2,9 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	dbh "mysql_drive/backend/db_handler"
 )
@@ -24,7 +24,6 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 		htmlStr += "<li>" + caps[i] + "<ul>"
 		less := dbh.Get_Lessons(db, i+1)
 		for j := 0; j < len(less); j++ {
-			fmt.Printf(less[j] + " " + caps[i] + "\n")
 			htmlStr += "<form hx-post='/load-lesson' hx-target='#content' hx-swap='innerHTML'>"
 			htmlStr += "<input type='hidden' name='id' value='" + less[j] + "'>"
 			htmlStr += "<input type='submit' name='submit' value='" + less[j] + "'>"
@@ -37,6 +36,21 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
 	tmpl.Execute(w, nil)
+}
+
+func Load_chapters(w http.ResponseWriter, r *http.Request) {
+	htmlStr := "<select name='capitol'>"
+	caps := dbh.Get_Chapters(db)
+
+	for i := 0; i < len(caps); i++ {
+		htmlStr += "<option value='" + strconv.Itoa(i+1) + caps[i] + "' >" + caps[i] + "</option>"
+	}
+
+	htmlStr += "</option>"
+	tmpl, _ := template.New("t").Parse(htmlStr)
+
+	tmpl.Execute(w, nil)
+
 }
 
 func Load_lesson(w http.ResponseWriter, r *http.Request) {

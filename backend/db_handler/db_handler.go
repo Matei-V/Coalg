@@ -39,6 +39,7 @@ type prob struct {
 
 func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool /*, r []res, pb []prob*/) {
 	if insert_chap {
+		fmt.Printf("insert" + c.titlu + "\n")
 		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", c.titlu, u.id_unit)
 		if err != nil {
 			panic(err.Error())
@@ -46,7 +47,9 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 		defer insert.Close()
 	}
 	if insert_pag {
-		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere) values(?, ?, ?)", p.titlu, c.id_cap, p.descriere)
+		id_c := strconv.Itoa(c.id_cap)
+		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere) values(?, ?, ?)", p.titlu, id_c, p.descriere)
+		fmt.Printf("insert" + p.titlu + "\n")
 		if err != nil {
 			panic(err.Error())
 		}

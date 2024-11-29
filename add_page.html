@@ -54,7 +54,8 @@
         <option value="12">Clasa a 12-a</option>
       </select>
       <br>
-      <input type="text" name="capitol" placeholder="Capitol" id="input">
+      <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
+      <input type="hidden" name="add-cap" value="false">
       <br>
       <input type="text" name="titlu" placeholder="Titlu" id="input">
       <br>
