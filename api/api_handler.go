@@ -50,7 +50,25 @@ func Load_chapters(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
 	tmpl.Execute(w, nil)
+}
 
+func Add_new_chapter(w http.ResponseWriter, r *http.Request) {
+	htmlStr := "<input type='text' name='capitol' placeholder='Capitol' id='input'>\n"
+	htmlStr += "<button hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add to exsisting Chapter</button>\n"
+	htmlStr += "<input type='hidden' name='add-cap' value='true'>"
+
+	tmpl, _ := template.New("t").Parse(htmlStr)
+
+	tmpl.Execute(w, nil)
+}
+
+func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
+	htmlStr := "<div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>\n"
+	htmlStr += "<button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>"
+	htmlStr += "<input type='hidden' name='add-cap' value='false'>"
+
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
 }
 
 func Load_lesson(w http.ResponseWriter, r *http.Request) {

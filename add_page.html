@@ -43,7 +43,6 @@
       <div class="arrow-right"></div>
     </div>
   </div>
-
   <div class="main" id="main" style="position:relative; left:240px">
     <div class="separator"></div>
     <form hx-post="/add_new_page">
@@ -54,8 +53,11 @@
         <option value="12">Clasa a 12-a</option>
       </select>
       <br>
-      <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
-      <input type="hidden" name="add-cap" value="false">
+      <div class="Chapter">
+        <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
+        <button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>
+        <input type="hidden" name="add-cap" value="false">
+      </div>
       <br>
       <input type="text" name="titlu" placeholder="Titlu" id="input">
       <br>

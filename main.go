@@ -49,15 +49,15 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 
 	if !add_cap {
 		str := r.PostFormValue("capitol")
-		var idx int
-		for i := 0; i < len(str); i++ {
-			_, err := strconv.Atoi(str[i : i+1])
+		var idx, i int
+		aux, err := strconv.Atoi(str[0:1])
+		for i = 0; i < len(str) && err == nil; i++ {
+			aux, err = strconv.Atoi(str[i : i+1])
 			if err == nil {
-				aux, _ := strconv.Atoi(str[i : i+1])
 				idx = idx*10 + aux
 			}
 		}
-		cap = dbh.Create_chap(idx, str[1:])
+		cap = dbh.Create_chap(idx, str[i:])
 	}
 
 	dbh.Add_page(db, u, cap, add_cap, pag, true)
@@ -77,6 +77,8 @@ func add_ApiHandlers() {
 	http.HandleFunc("/add_new_page", addPage)
 	http.HandleFunc("/load-lesson", api.Load_lesson)
 	http.HandleFunc("/load-chapters", api.Load_chapters)
+	http.HandleFunc("/add_new_chapter", api.Add_new_chapter)
+	http.HandleFunc("/add_to_existing_chapter", api.Add_to_existing_chapter)
 }
 
 func main() {
