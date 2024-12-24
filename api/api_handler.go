@@ -85,7 +85,6 @@ func Add_res(w http.ResponseWriter, r *http.Request) {
 
 func Update_nr_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
-	nr_res++
 	htmlStr := "<input class='nr_res' type='hidden' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
@@ -103,7 +102,6 @@ func Add_pb(w http.ResponseWriter, r *http.Request) {
 
 func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
-	nr_pb++
 	htmlStr := "<input class='nr_pb' type='hidden' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)

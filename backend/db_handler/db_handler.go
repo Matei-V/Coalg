@@ -37,7 +37,7 @@ type prob struct {
 	limba string
 }
 
-func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool /*, r []res, pb []prob*/) {
+func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool, r []res, insert_res bool, pb []prob, insert_pb bool) {
 	if insert_chap {
 		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", c.titlu, u.id_unit)
 		if err != nil {
@@ -53,15 +53,17 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 		}
 		defer insert.Close()
 	}
-	/*
+	if insert_res {
 		for i := 0; i < len(r); i++ {
-			insert, err := db.Query("insert into resursa(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
+			insert, err := db.Query("insert into resursa(titlu, link, limba, id_pag) values(?, ?, ?, ?)",
 				r[i].titlu, r[i].link, r[i].limba, p.id_pag)
 			if err != nil {
 				panic(err.Error())
 			}
 			defer insert.Close()
 		}
+	}
+	if insert_pb {
 		for i := 0; i < len(pb); i++ {
 			insert, err := db.Query("insert into problema(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
 				pb[i].titlu, pb[i].link, pb[i].limba, p.id_pag)
@@ -69,7 +71,8 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 				panic(err.Error())
 			}
 			defer insert.Close()
-		}*/
+		}
+	}
 }
 
 func Last_id(db *sql.DB, table string, id_type string) int {
@@ -144,6 +147,38 @@ func Create_pag(id_pag int, titlu string, descriere string) pag {
 	ans.id_pag = id_pag
 	ans.titlu = titlu
 	ans.descriere = descriere
+	return ans
+}
+
+func Create_res(id_res []int, titlu []string /*, link []string, limba []string*/) []res {
+	var ans []res
+
+	for i := 0; i < len(id_res); i++ {
+		var aux res
+		aux.id_res = id_res[i]
+		aux.titlu = titlu[i]
+		aux.link = ""
+		aux.limba = ""
+
+		ans = append(ans, aux)
+	}
+
+	return ans
+}
+
+func Create_pb(id_pb []int, titlu []string /*, link []string, limba []string*/) []prob {
+	var ans []prob
+
+	for i := 0; i < len(id_pb); i++ {
+		var aux prob
+		aux.id_pb = id_pb[i]
+		aux.titlu = titlu[i]
+		aux.link = ""
+		aux.limba = ""
+
+		ans = append(ans, aux)
+	}
+
 	return ans
 }
 

@@ -47,6 +47,28 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	cap := dbh.Create_chap(dbh.Last_id(db, "capitol", "id_cap")+1, r.PostFormValue("capitol"))
 	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"), r.PostFormValue("descriere"))
 
+	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
+	var titlu_res []string
+	var id_res []int
+	init_id := dbh.Last_id(db, "resursa", "id_res")
+	for i := 0; i < nr_res; i++ {
+		titlu_res = append(titlu_res, r.PostFormValue("res_"+strconv.Itoa(i+1)))
+		id_res = append(id_res, init_id+i+1)
+	}
+	res := dbh.Create_res(id_res, titlu_res)
+	add_res := (nr_res != 0)
+
+	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
+	var titlu_pb []string
+	var id_pb []int
+	init_id = dbh.Last_id(db, "problema", "id_prob")
+	for i := 0; i < nr_pb; i++ {
+		titlu_pb = append(titlu_pb, r.PostFormValue("pb_"+strconv.Itoa(i+1)))
+		id_pb = append(id_pb, init_id+i+1)
+	}
+	pb := dbh.Create_pb(id_pb, titlu_pb)
+	add_pb := (nr_pb != 0)
+
 	if !add_cap {
 		str := r.PostFormValue("capitol")
 		var idx, i int
@@ -60,7 +82,7 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 		cap = dbh.Create_chap(idx, str[i:])
 	}
 
-	dbh.Add_page(db, u, cap, add_cap, pag, true)
+	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb)
 }
 
 func add_FileSystem() {
