@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -67,6 +68,43 @@ func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
 	htmlStr += "<button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>"
 	htmlStr += "<input type='hidden' name='add-cap' value='false'>"
 
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
+}
+
+func Add_res(w http.ResponseWriter, r *http.Request) {
+	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
+	nr_res++
+	htmlStr := "<input type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' ><br>\n"
+
+	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
+	fmt.Print(nr_res)
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
+}
+
+func Update_nr_res(w http.ResponseWriter, r *http.Request) {
+	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
+	nr_res++
+	htmlStr := "<input class='nr_res' type='hidden' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
+}
+
+func Add_pb(w http.ResponseWriter, r *http.Request) {
+	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
+	nr_pb++
+	htmlStr := "<input type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
+
+	htmlStr += "<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
+}
+
+func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
+	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
+	nr_pb++
+	htmlStr := "<input class='nr_pb' type='hidden' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }

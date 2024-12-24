@@ -58,14 +58,27 @@
         <button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>
         <input type="hidden" name="add-cap" value="false">
       </div>
+
       <br>
       <input type="text" name="titlu" placeholder="Titlu" id="input">
       <br>
-      <input type="text" name="resurse" placeholder="Resurse" id="input">
-      <br>
       <input type="text" name="descriere" placeholder="Descriere" id="input">
       <br>
-      <input type="text" name="problema" placeholder="problema" id="input">
+
+      <div class="Resurse">
+        <input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res'
+          value='0'>
+        <input type="button" hx-post='/add_res' hx-target='.nr_res' hx-swap='outerHTML' value="Adauga Resursa">
+        <br>
+      </div>
+
+      <div class="Probleme">
+        <input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb'
+          value='0'>
+        <input type="button" hx-post='/add_pb' hx-target='.nr_pb' hx-swap='outerHTML' value="Adauga Problema">
+        <br>
+      </div>
+
       <br>
       <input type="submit" value="Submit">
     </form>

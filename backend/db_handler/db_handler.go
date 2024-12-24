@@ -39,7 +39,6 @@ type prob struct {
 
 func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool /*, r []res, pb []prob*/) {
 	if insert_chap {
-		fmt.Printf("insert" + c.titlu + "\n")
 		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", c.titlu, u.id_unit)
 		if err != nil {
 			panic(err.Error())
@@ -49,7 +48,6 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	if insert_pag {
 		id_c := strconv.Itoa(c.id_cap)
 		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere) values(?, ?, ?)", p.titlu, id_c, p.descriere)
-		fmt.Printf("insert" + p.titlu + "\n")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -117,7 +115,6 @@ func Get_Chapters(db *sql.DB) []string {
 func Get_Lessons(db *sql.DB, id_cap int) []string {
 	var clmn []string
 	row_num := Last_id(db, "pagina", "id_pag")
-	fmt.Printf(strconv.Itoa(id_cap))
 	for i := 0; i < row_num; i++ {
 		var ans string
 		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + ";"
@@ -154,7 +151,6 @@ func Get_pag(db *sql.DB, titlu string) string {
 	var ans string
 
 	stmt := "select descriere from pagina where titlu='" + titlu + "';"
-	fmt.Printf(stmt + "\n")
 	row := db.QueryRow(stmt)
 	row.Scan(&ans)
 	return ans

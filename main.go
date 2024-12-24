@@ -79,6 +79,10 @@ func add_ApiHandlers() {
 	http.HandleFunc("/load-chapters", api.Load_chapters)
 	http.HandleFunc("/add_new_chapter", api.Add_new_chapter)
 	http.HandleFunc("/add_to_existing_chapter", api.Add_to_existing_chapter)
+	http.HandleFunc("/add_res", api.Add_res)
+	http.HandleFunc("/update_nr_res", api.Update_nr_res)
+	http.HandleFunc("/add_pb", api.Add_pb)
+	http.HandleFunc("/update_nr_pb", api.Update_nr_pb)
 }
 
 func main() {
