@@ -20,19 +20,17 @@ func Load_menu(w http.ResponseWriter, r *http.Request) {
 
 func Write_menu(w http.ResponseWriter, r *http.Request) {
 	caps := dbh.Get_Chapters(db)
-	htmlStr := "<ul class='chapters'>\n"
+	var htmlStr string
 	for i := 0; i < len(caps); i++ {
-		htmlStr += "<li>" + caps[i] + "<ul>"
+		htmlStr += "<h3 class='capitol'>" + caps[i] + "</h3>"
 		less := dbh.Get_Lessons(db, i+1)
 		for j := 0; j < len(less); j++ {
 			htmlStr += "<form hx-post='/load-lesson' hx-target='#content' hx-swap='innerHTML'>"
-			htmlStr += "<input type='hidden' name='id' value='" + less[j] + "'>"
-			htmlStr += "<input type='submit' name='submit' value='" + less[j] + "'>"
+			htmlStr += "<input  type='hidden' name='id' value='" + less[j] + "'>"
+			htmlStr += "<input class='lesson' type='submit' name='submit' value='" + less[j] + "'>"
 			htmlStr += "</form>"
 		}
-		htmlStr += "</ul></li>"
 	}
-	htmlStr += "</ul>"
 
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
@@ -40,7 +38,7 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 }
 
 func Load_chapters(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "<select name='capitol'>"
+	htmlStr := "<select class='text-input' name='capitol'>"
 	caps := dbh.Get_Chapters(db)
 
 	for i := 0; i < len(caps); i++ {
@@ -54,8 +52,8 @@ func Load_chapters(w http.ResponseWriter, r *http.Request) {
 }
 
 func Add_new_chapter(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "<input type='text' name='capitol' placeholder='Capitol' id='input'>\n"
-	htmlStr += "<button hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add to exsisting Chapter</button>\n"
+	htmlStr := "<input class='text-input' type='text' name='capitol' placeholder='Capitol'>\n"
+	htmlStr += "<button class='button' hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add to exsisting Chapter</button>\n"
 	htmlStr += "<input type='hidden' name='add-cap' value='true'>"
 
 	tmpl, _ := template.New("t").Parse(htmlStr)
@@ -65,7 +63,7 @@ func Add_new_chapter(w http.ResponseWriter, r *http.Request) {
 
 func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
 	htmlStr := "<div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>\n"
-	htmlStr += "<button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>"
+	htmlStr += "<button class='button' hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>"
 	htmlStr += "<input type='hidden' name='add-cap' value='false'>"
 
 	tmpl, _ := template.New("t").Parse(htmlStr)
@@ -75,8 +73,8 @@ func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
 func Add_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
 	nr_res++
-	htmlStr := "<input type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
-	htmlStr += "<input type='text' placeholder='link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
+	htmlStr := "<input class='text-input' type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
+	htmlStr += "<input class='text-input' type='text' placeholder='link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
 
 	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
 	fmt.Print(nr_res)
@@ -94,8 +92,8 @@ func Update_nr_res(w http.ResponseWriter, r *http.Request) {
 func Add_pb(w http.ResponseWriter, r *http.Request) {
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
 	nr_pb++
-	htmlStr := "<input type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
-	htmlStr += "<input type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
+	htmlStr := "<input class='text-input' type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' >\n"
+	htmlStr += "<input class='text-input' type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
 
 	htmlStr += "<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
 	tmpl, _ := template.New("t").Parse(htmlStr)

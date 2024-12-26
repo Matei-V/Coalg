@@ -1,11 +1,9 @@
-body{
+html, body{
   background: #212529;
   margin: 0;
   color: #fff;
-}
-
-.main{
-  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .header{
@@ -14,11 +12,16 @@ body{
   position: fixed;
   margin: 0;
   background-color: #712cf9;
+  z-index:5;
 }
 
 .separator{
   height: 65px;
 
+}
+
+.main {
+  min-height: 100vh;
 }
 
 .slider{
@@ -62,11 +65,45 @@ body{
 }
 
 .menu{
-  position: fixed;
+  position: absolute;
   top: 65px;
-  left: -39px;
-  height: 100%;
+  left: 0px;
   border: 1px solid #fff;
 }
 
+.text-input {
+  background: #212529;
+  color: #fff;
+  height: 30px;
+  width: 300px;
+  margin: 5px;
+  border-radius: 7px;
+}
+
+#descriere {
+  width: 40%;
+  height: 400px;
+}
+
+.button {
+  background: #3333ff;
+  color: #fff;
+  border: 1px solid #3333ff;
+  border-radius: 7px;
+  margin: 3px;
+  width: 150px;
+  height: 40px;
+}
+
+.lesson {
+  background: #212529;
+  border: 0px solid #000;
+  width: 100%;
+  color: #fff;
+  font-size: 20px;
+}
+
+.lesson:hover {
+  background: #4d4d4d;
+}
 

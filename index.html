@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>cO(alg)</title>
 
-  <link href="css/style.css" rel="stylesheet">
+  <link href="template/css/style.css" rel="stylesheet">
+
   <script>
     var menu_tog = false;
 
@@ -16,11 +17,11 @@
       if (menu_tog === false) {
         document.getElementById("menu").style.left = "0px";
         document.getElementById("slider").style.left = menu_width.toString() + "px";
-        document.getElementById("main").style.left = (menu_width + 30).toString() + "px";
+        document.getElementById("content").style.left = (menu_width + 30).toString() + "px";
       } else {
         document.getElementById("menu").style.left = "-" + menu_width.toString() + "px";
         document.getElementById("slider").style.left = "0px";
-        document.getElementById("main").style.left = "30px";
+        document.getElementById("content").style.left = "30px";
       }
       menu_tog = !menu_tog;
     }
@@ -34,19 +35,18 @@
     <h3>cOalg</h3>
   </div>
 
-  <div class="menu" id="menu" hx-post='/load-menu' hx-trigger='load' hx-swap='outerHTML'>
-    <div class="slider" id="slider" onclick="show_menu()">
-      <div class="arrow-left"></div>
-      <div class="arrow-right"></div>
-    </div>
-  </div>
 
-  <div class="main" id="main" style="position:relative; left:240px">
+
+  <div class="main" id="main">
     <div class="separator"></div>
+    <div class="menu" id="menu" hx-post='/load-menu' hx-trigger='load' hx-swap='outerHTML'>
+      <div class="slider" id="slider" onclick="show_menu()">
+        <div class="arrow-left"></div>
+        <div class="arrow-right"></div>
+      </div>
+    </div>
 
-    <div id="content">
-
-      
+    <div id="content" style="position:relative; left:240px">
     </div>
 
 

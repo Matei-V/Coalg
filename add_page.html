@@ -6,24 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>cO(alg)</title>
 
-  <link href="/css/style.css" rel="stylesheet">
-  <script>
-    var menu_tog = false;
+  <link href="template/css/style.css" rel="stylesheet">
 
+  <script>
+    var menu_tog = true;
     function show_menu() {
       var menu_width = document.getElementById("menu").offsetWidth;
       console.log(menu_width);
       if (menu_tog === false) {
         document.getElementById("menu").style.left = "0px";
         document.getElementById("slider").style.left = menu_width.toString() + "px";
-        document.getElementById("main").style.left = (menu_width + 30).toString() + "px";
+        document.getElementById("content").style.left = (menu_width + 30).toString() + "px";
       } else {
         document.getElementById("menu").style.left = "-" + menu_width.toString() + "px";
         document.getElementById("slider").style.left = "0px";
-        document.getElementById("main").style.left = "30px";
+        document.getElementById("content").style.left = "50px";
       }
       menu_tog = !menu_tog;
     }
+    window.onload = function () {
+      show_menu();
+    };
   </script>
 
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
@@ -46,7 +49,7 @@
   <div class="main" id="main" style="position:relative; left:240px">
     <div class="separator"></div>
     <form hx-post="/add_new_page">
-      <select name="unitate">
+      <select class='text-input' name="unitate">
         <option value="9">Clasa a 9-a</option>
         <option value="10">Clasa a 10-a</option>
         <option value="11">Clasa a 11-a</option>
@@ -55,32 +58,36 @@
       <br>
       <div class="Chapter">
         <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
-        <button hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>
+        <button class='button' hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new
+          Chapter</button>
         <input type="hidden" name="add-cap" value="false">
       </div>
 
       <br>
-      <input type="text" name="titlu" placeholder="Titlu" id="input">
+      <input class='text-input' id='titlu' type="text" name="titlu" placeholder="Titlu" id="input">
       <br>
-      <input type="text" name="descriere" placeholder="Descriere" id="input">
+      <textarea class='text-input' id='descriere' type="text" name="descriere" placeholder="Descriere"
+        id="input"></textarea>
       <br>
 
       <div class="Resurse">
         <input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res'
           value='0'>
-        <input type="button" hx-post='/add_res' hx-target='.nr_res' hx-swap='outerHTML' value="Adauga Resursa">
+        <input class='button' type="button" hx-post='/add_res' hx-target='.nr_res' hx-swap='outerHTML'
+          value="Adauga Resursa">
         <br>
       </div>
 
       <div class="Probleme">
         <input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb'
           value='0'>
-        <input type="button" hx-post='/add_pb' hx-target='.nr_pb' hx-swap='outerHTML' value="Adauga Problema">
+        <input class='button' type="button" hx-post='/add_pb' hx-target='.nr_pb' hx-swap='outerHTML'
+          value="Adauga Problema">
         <br>
       </div>
 
       <br>
-      <input type="submit" value="Submit">
+      <input class='button' type="submit" value="Submit">
     </form>
 
   </div>

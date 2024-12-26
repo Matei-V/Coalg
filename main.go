@@ -88,13 +88,6 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb)
 }
 
-func add_FileSystem() {
-	fs := http.FileServer(http.Dir("template/css"))
-	http.Handle("/css/", http.StripPrefix("/css/", fs))
-	fs = http.FileServer(http.Dir("template/scripts"))
-	http.Handle("/scripts/", http.StripPrefix("/scripts/", fs))
-}
-
 func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
 	http.HandleFunc("/get-menu", api.Write_menu)
@@ -111,8 +104,8 @@ func add_ApiHandlers() {
 }
 
 func main() {
-	add_FileSystem()
 	add_ApiHandlers()
+	http.Handle("/template/", http.StripPrefix("/template/", http.FileServer(http.Dir("template"))))
 
 	http.HandleFunc("/", exeIndex)
 	http.ListenAndServe(":8000", nil)
