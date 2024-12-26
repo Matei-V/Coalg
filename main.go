@@ -26,6 +26,7 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 }
+
 func exePageadd(w http.ResponseWriter, r *http.Request) {
 	var filename = "add_page.html"
 	t, err := template.ParseFiles(filename)
@@ -48,25 +49,27 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	pag := dbh.Create_pag(dbh.Last_id(db, "pagina", "id_pag")+1, r.PostFormValue("titlu"), r.PostFormValue("descriere"))
 
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
-	var titlu_res []string
+	var titlu_res, link_res []string
 	var id_res []int
 	init_id := dbh.Last_id(db, "resursa", "id_res")
 	for i := 0; i < nr_res; i++ {
 		titlu_res = append(titlu_res, r.PostFormValue("res_"+strconv.Itoa(i+1)))
+		link_res = append(link_res, r.PostFormValue("link_res_"+strconv.Itoa(i+1)))
 		id_res = append(id_res, init_id+i+1)
 	}
-	res := dbh.Create_res(id_res, titlu_res)
+	res := dbh.Create_res(id_res, titlu_res, link_res)
 	add_res := (nr_res != 0)
 
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
-	var titlu_pb []string
+	var titlu_pb, link_pb []string
 	var id_pb []int
 	init_id = dbh.Last_id(db, "problema", "id_prob")
 	for i := 0; i < nr_pb; i++ {
 		titlu_pb = append(titlu_pb, r.PostFormValue("pb_"+strconv.Itoa(i+1)))
+		link_pb = append(link_pb, r.PostFormValue("link_pb_"+strconv.Itoa(i+1)))
 		id_pb = append(id_pb, init_id+i+1)
 	}
-	pb := dbh.Create_pb(id_pb, titlu_pb)
+	pb := dbh.Create_pb(id_pb, titlu_pb, link_pb)
 	add_pb := (nr_pb != 0)
 
 	if !add_cap {

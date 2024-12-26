@@ -75,7 +75,8 @@ func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
 func Add_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
 	nr_res++
-	htmlStr := "<input type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' ><br>\n"
+	htmlStr := "<input type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
+	htmlStr += "<input type='text' placeholder='link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
 
 	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
 	fmt.Print(nr_res)
@@ -94,6 +95,7 @@ func Add_pb(w http.ResponseWriter, r *http.Request) {
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
 	nr_pb++
 	htmlStr := "<input type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
+	htmlStr += "<input type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
 
 	htmlStr += "<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
@@ -110,8 +112,22 @@ func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
 func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("id")
 	desc := dbh.Get_pag(db, title)
+
+	titlu_res, link_res := dbh.Get_res(db, title)
 	htmlStr := "<h3>" + title + "</h3>"
 	htmlStr += desc
+	htmlStr += "<br>"
+
+	htmlStr += "<h3>Resursa</h3>"
+	for i := 0; i < len(titlu_res); i++ {
+		htmlStr += "<a href='" + link_res[i] + "'>" + titlu_res[i] + "</a><br>"
+	}
+
+	titlu_pb, link_pb := dbh.Get_pb(db, title)
+	htmlStr += "<h3>Problema</h3>"
+	for i := 0; i < len(titlu_pb); i++ {
+		htmlStr += "<a href='" + link_pb[i] + "'>" + titlu_pb[i] + "</a><br>"
+	}
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }

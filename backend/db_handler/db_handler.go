@@ -55,8 +55,8 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_res {
 		for i := 0; i < len(r); i++ {
-			insert, err := db.Query("insert into resursa(titlu, link, limba, id_pag) values(?, ?, ?, ?)",
-				r[i].titlu, r[i].link, r[i].limba, p.id_pag)
+			insert, err := db.Query("insert into resursa(titlu, link, id_pag) values(?, ?, ?)",
+				r[i].titlu, r[i].link, p.id_pag)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -65,8 +65,8 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_pb {
 		for i := 0; i < len(pb); i++ {
-			insert, err := db.Query("insert into problema(titlu, link, limba,  id_pag) values(?, ?, ?, ?)",
-				pb[i].titlu, pb[i].link, pb[i].limba, p.id_pag)
+			insert, err := db.Query("insert into problema(titlu, link,  id_pag) values(?, ?, ?)",
+				pb[i].titlu, pb[i].link, p.id_pag)
 			if err != nil {
 				panic(err.Error())
 			}
@@ -150,15 +150,14 @@ func Create_pag(id_pag int, titlu string, descriere string) pag {
 	return ans
 }
 
-func Create_res(id_res []int, titlu []string /*, link []string, limba []string*/) []res {
+func Create_res(id_res []int, titlu []string, link []string) []res {
 	var ans []res
 
 	for i := 0; i < len(id_res); i++ {
 		var aux res
 		aux.id_res = id_res[i]
 		aux.titlu = titlu[i]
-		aux.link = ""
-		aux.limba = ""
+		aux.link = link[i]
 
 		ans = append(ans, aux)
 	}
@@ -166,15 +165,14 @@ func Create_res(id_res []int, titlu []string /*, link []string, limba []string*/
 	return ans
 }
 
-func Create_pb(id_pb []int, titlu []string /*, link []string, limba []string*/) []prob {
+func Create_pb(id_pb []int, titlu []string, link []string) []prob {
 	var ans []prob
 
 	for i := 0; i < len(id_pb); i++ {
 		var aux prob
 		aux.id_pb = id_pb[i]
 		aux.titlu = titlu[i]
-		aux.link = ""
-		aux.limba = ""
+		aux.link = link[i]
 
 		ans = append(ans, aux)
 	}
@@ -189,4 +187,64 @@ func Get_pag(db *sql.DB, titlu string) string {
 	row := db.QueryRow(stmt)
 	row.Scan(&ans)
 	return ans
+}
+
+func Get_res(db *sql.DB, titlu string) ([]string, []string) {
+	var id_pag, nr_res string
+	var titlu_res, link []string
+	var aux string
+	stmt := "select id_pag from pagina where titlu='" + titlu + "';"
+	row := db.QueryRow(stmt)
+	row.Scan(&id_pag)
+
+	stmt = "select count(*) from resursa where id_pag='" + id_pag + "';"
+	row = db.QueryRow(stmt)
+	row.Scan(&nr_res)
+
+	n, _ := strconv.Atoi(nr_res)
+
+	for i := 0; i < n; i++ {
+		stmt = "select titlu from resursa where id_pag='" + id_pag + "' limit 1 offset " + strconv.Itoa(i) + ";"
+		row = db.QueryRow(stmt)
+		row.Scan(&aux)
+		titlu_res = append(titlu_res, aux)
+
+		stmt = "select link from resursa where id_pag='" + id_pag + "' limit 1 offset " + strconv.Itoa(i) + ";"
+		row = db.QueryRow(stmt)
+		row.Scan(&aux)
+		link = append(link, aux)
+	}
+
+	return titlu_res, link
+
+}
+
+func Get_pb(db *sql.DB, titlu string) ([]string, []string) {
+	var id_pag, nr_pb string
+	var titlu_pb, link []string
+	var aux string
+	stmt := "select id_pag from pagina where titlu='" + titlu + "';"
+	row := db.QueryRow(stmt)
+	row.Scan(&id_pag)
+
+	stmt = "select count(*) from problema where id_pag='" + id_pag + "';"
+	row = db.QueryRow(stmt)
+	row.Scan(&nr_pb)
+
+	n, _ := strconv.Atoi(nr_pb)
+
+	for i := 0; i < n; i++ {
+		stmt = "select titlu from problema where id_pag='" + id_pag + "' limit 1 offset " + strconv.Itoa(i) + ";"
+		row = db.QueryRow(stmt)
+		row.Scan(&aux)
+		titlu_pb = append(titlu_pb, aux)
+
+		stmt = "select link from problema where id_pag='" + id_pag + "' limit 1 offset " + strconv.Itoa(i) + ";"
+		row = db.QueryRow(stmt)
+		row.Scan(&aux)
+		link = append(link, aux)
+	}
+
+	return titlu_pb, link
+
 }
