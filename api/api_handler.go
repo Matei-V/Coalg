@@ -19,6 +19,8 @@ func Load_menu(w http.ResponseWriter, r *http.Request) {
 }
 
 func Write_menu(w http.ResponseWriter, r *http.Request) {
+	unit := r.PostFormValue("Unitate")
+	fmt.Print(unit + "\n")
 	caps := dbh.Get_Chapters(db)
 	var htmlStr string
 	for i := 0; i < len(caps); i++ {
@@ -40,7 +42,6 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 func Load_chapters(w http.ResponseWriter, r *http.Request) {
 	htmlStr := "<select class='text-input' name='capitol'>"
 	caps := dbh.Get_Chapters(db)
-
 	for i := 0; i < len(caps); i++ {
 		htmlStr += "<option value='" + strconv.Itoa(i+1) + caps[i] + "' >" + caps[i] + "</option>"
 	}

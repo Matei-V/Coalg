@@ -130,65 +130,6 @@ func Get_Lessons(db *sql.DB, id_cap int) []string {
 	return clmn
 }
 
-func Create_chap(id_cap int, titlu string) chap {
-	var ans chap
-	ans.id_cap = id_cap
-	ans.titlu = titlu
-	return ans
-}
-
-func Create_unit(id_unit int) unit {
-	var ans unit
-	ans.id_unit = id_unit
-	return ans
-}
-func Create_pag(id_pag int, titlu string, descriere string) pag {
-	var ans pag
-	ans.id_pag = id_pag
-	ans.titlu = titlu
-	ans.descriere = descriere
-	return ans
-}
-
-func Create_res(id_res []int, titlu []string, link []string) []res {
-	var ans []res
-
-	for i := 0; i < len(id_res); i++ {
-		var aux res
-		aux.id_res = id_res[i]
-		aux.titlu = titlu[i]
-		aux.link = link[i]
-
-		ans = append(ans, aux)
-	}
-
-	return ans
-}
-
-func Create_pb(id_pb []int, titlu []string, link []string) []prob {
-	var ans []prob
-
-	for i := 0; i < len(id_pb); i++ {
-		var aux prob
-		aux.id_pb = id_pb[i]
-		aux.titlu = titlu[i]
-		aux.link = link[i]
-
-		ans = append(ans, aux)
-	}
-
-	return ans
-}
-
-func Get_pag(db *sql.DB, titlu string) string {
-	var ans string
-
-	stmt := "select descriere from pagina where titlu='" + titlu + "';"
-	row := db.QueryRow(stmt)
-	row.Scan(&ans)
-	return ans
-}
-
 func Get_res(db *sql.DB, titlu string) ([]string, []string) {
 	var id_pag, nr_res string
 	var titlu_res, link []string
@@ -247,4 +188,62 @@ func Get_pb(db *sql.DB, titlu string) ([]string, []string) {
 
 	return titlu_pb, link
 
+}
+func Create_chap(id_cap int, titlu string) chap {
+	var ans chap
+	ans.id_cap = id_cap
+	ans.titlu = titlu
+	return ans
+}
+
+func Create_unit(id_unit int) unit {
+	var ans unit
+	ans.id_unit = id_unit
+	return ans
+}
+func Create_pag(id_pag int, titlu string, descriere string) pag {
+	var ans pag
+	ans.id_pag = id_pag
+	ans.titlu = titlu
+	ans.descriere = descriere
+	return ans
+}
+
+func Create_res(id_res []int, titlu []string, link []string) []res {
+	var ans []res
+
+	for i := 0; i < len(id_res); i++ {
+		var aux res
+		aux.id_res = id_res[i]
+		aux.titlu = titlu[i]
+		aux.link = link[i]
+
+		ans = append(ans, aux)
+	}
+
+	return ans
+}
+
+func Create_pb(id_pb []int, titlu []string, link []string) []prob {
+	var ans []prob
+
+	for i := 0; i < len(id_pb); i++ {
+		var aux prob
+		aux.id_pb = id_pb[i]
+		aux.titlu = titlu[i]
+		aux.link = link[i]
+
+		ans = append(ans, aux)
+	}
+
+	return ans
+}
+
+func Get_pag(db *sql.DB, titlu string) string {
+	var ans string
+
+	stmt := "select descriere from pagina where titlu='" + titlu + "';"
+	row := db.QueryRow(stmt)
+	row.Scan(&ans)
+	return ans
 }

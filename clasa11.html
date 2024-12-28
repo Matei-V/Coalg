@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cO(alg)</title>
+
+  <link href="template/css/style.css" rel="stylesheet">
+
+  <script>
+    var menu_tog = false;
+
+    function show_menu() {
+      var menu_width = document.getElementById("menu").offsetWidth;
+      console.log(menu_width);
+      if (menu_tog === false) {
+        document.getElementById("menu").style.left = "0px";
+        document.getElementById("slider").style.left = menu_width.toString() + "px";
+        document.getElementById("content").style.left = (menu_width + 30).toString() + "px";
+      } else {
+        document.getElementById("menu").style.left = "-" + menu_width.toString() + "px";
+        document.getElementById("slider").style.left = "0px";
+        document.getElementById("content").style.left = "30px";
+      }
+      menu_tog = !menu_tog;
+    }
+  </script>
+
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+</head>
+
+<body>
+  <div class="header">
+    <p>
+    <div class='header-section'><a href="">cOalg</a></div>
+    <div class='header-section'><a href=""> Clasa a 9-a</a></div>
+    <div class='header-section'><a href=""> Clasa a 10-a</a></div>
+    <div class='header-section'><a href=""> Clasa a 11-a</a></div>
+    </p>
+  </div>
+
+  <div class="main" id="main">
+    <div class="separator"></div>
+    <div class="menu">
+    </div>
+
+    <div id="content" style="position:relative; left:240px">
+    </div>
+
+
+  </div>
+
+  <div class="footer">
+
+  </div>
+
+  <form hx-post='/get-menu' hx-trigger='load' hx-swap='outerHTML' hx-trigger='.menu'>
+    <input type="hidden" name="Unitate" value="11">
+  </form>
+</body>
+
+</html>

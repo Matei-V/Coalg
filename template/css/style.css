@@ -2,7 +2,9 @@ html, body{
   background: #212529;
   margin: 0;
   color: #fff;
-  overflow-x: hidden;
+  overflow-x: visible; 
+  white-space: initial;
+  word-wrap: break-word;
   overflow-y: scroll;
 }
 
@@ -10,6 +12,7 @@ html, body{
   width: 100%;
   height: 65px;
   position: fixed;
+  display: flex;
   margin: 0;
   background-color: #712cf9;
   z-index:5;
@@ -17,7 +20,6 @@ html, body{
 
 .separator{
   height: 65px;
-
 }
 
 .main {
@@ -107,3 +109,23 @@ html, body{
   background: #4d4d4d;
 }
 
+.header-section{
+  display: flex;  
+  height: 100%;
+}
+
+.header-section a {
+  font-size: 20px;
+  color: #fff;
+  padding: 15px;
+  text-decoration-line: none;
+  font-weight: bold;
+}
+
+#content {
+  max-width: 60vw;
+}
+
+.header a:hover{
+  background: #4606c6;
+}
