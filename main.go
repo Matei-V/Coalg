@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"html/template"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	api "mysql_drive/api"
@@ -15,13 +16,18 @@ import (
 var db *sql.DB = dbh.Connect_db()
 
 func exeIndex(w http.ResponseWriter, r *http.Request) {
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+
+	unit := param.Get("clasa")
+
 	var filename = "index.html"
 	t, err := template.ParseFiles(filename)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	err = t.ExecuteTemplate(w, filename, nil)
+	err = t.ExecuteTemplate(w, filename, unit)
 	if err != nil {
 		panic(err.Error())
 	}

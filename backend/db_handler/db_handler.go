@@ -101,18 +101,21 @@ func Connect_db() *sql.DB {
 	return db
 }
 
-func Get_Chapters(db *sql.DB) []string {
-	var clmn []string
+func Get_Chapters(db *sql.DB, unit string) ([]string, []string) {
+	var clmn, id []string
 	row_num := Last_id(db, "capitol", "id_cap")
 
 	for i := 0; i < row_num; i++ {
 		var ans string
-		stmt := "select titlu from capitol where id_cap=" + strconv.Itoa(i+1) + ";"
+		stmt := "select titlu from capitol where id_cap=" + strconv.Itoa(i+1) + " and id_unit=" + unit + ";"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
-		clmn = append(clmn, ans)
+		if ans != "" {
+			clmn = append(clmn, ans)
+			id = append(id, strconv.Itoa(i+1))
+		}
 	}
-	return clmn
+	return clmn, id
 }
 
 func Get_Lessons(db *sql.DB, id_cap int) []string {

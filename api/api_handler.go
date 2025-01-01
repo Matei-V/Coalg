@@ -2,9 +2,9 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	dbh "mysql_drive/backend/db_handler"
@@ -13,17 +13,26 @@ import (
 var db *sql.DB = dbh.Connect_db()
 
 func Load_menu(w http.ResponseWriter, r *http.Request) {
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+	unit := param.Get("clasa")
+
 	htmlStr := "template/menu_tmp.html"
 	tmpl, _ := template.ParseFiles(htmlStr)
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, unit)
 }
 
 func Write_menu(w http.ResponseWriter, r *http.Request) {
-	unit := r.PostFormValue("Unitate")
-	fmt.Print(unit + "\n")
-	caps := dbh.Get_Chapters(db)
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+
+	unit := param.Get("clasa")
+	caps, _ := dbh.Get_Chapters(db, unit)
 	var htmlStr string
 	for i := 0; i < len(caps); i++ {
+		if caps[i] == "" {
+			continue
+		}
 		htmlStr += "<h3 class='capitol'>" + caps[i] + "</h3>"
 		less := dbh.Get_Lessons(db, i+1)
 		for j := 0; j < len(less); j++ {
@@ -41,12 +50,16 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 
 func Load_chapters(w http.ResponseWriter, r *http.Request) {
 	htmlStr := "<select class='text-input' name='capitol'>"
-	caps := dbh.Get_Chapters(db)
+	caps, id := dbh.Get_Chapters(db, "9")
+	aux, _ := dbh.Get_Chapters(db, "10")
+	caps = append(caps, aux...)
+	aux, _ = dbh.Get_Chapters(db, "11")
+	caps = append(caps, aux...)
 	for i := 0; i < len(caps); i++ {
-		htmlStr += "<option value='" + strconv.Itoa(i+1) + caps[i] + "' >" + caps[i] + "</option>"
+		htmlStr += "<option value='" + id[i] + caps[i] + "' >" + caps[i] + "</option>"
 	}
 
-	htmlStr += "</option>"
+	htmlStr += "</select>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
 	tmpl.Execute(w, nil)
@@ -75,10 +88,9 @@ func Add_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
 	nr_res++
 	htmlStr := "<input class='text-input' type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
-	htmlStr += "<input class='text-input' type='text' placeholder='link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
+	htmlStr += "<input class='text-input' type='text' placeholder='Link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
 
 	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
-	fmt.Print(nr_res)
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }

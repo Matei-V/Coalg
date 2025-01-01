@@ -25,18 +25,24 @@
       }
       menu_tog = !menu_tog;
     }
+
+    function slider_pos() {
+      var menu_width = document.getElementById("menu").offsetWidth;
+      document.getElementById("slider").style.left ="220px";
+      console.log(menu_width);
+    }
   </script>
 
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
-<body>
+<body >
   <div class="header">
     <p>
     <div class='header-section'><a href="">cOalg</a></div>
-    <div class='header-section'><a href=""> Clasa a 9-a</a></div>
-    <div class='header-section'><a href=""> Clasa a 10-a</a></div>
-    <div class='header-section'><a href=""> Clasa a 11-a</a></div>
+    <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
+    <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
+    <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
     </p>
   </div>
 
@@ -44,8 +50,8 @@
 
   <div class="main" id="main">
     <div class="separator"></div>
-    <div class="menu" id="menu" hx-post='/load-menu' hx-trigger='load' hx-swap='outerHTML'>
-      <div class="slider" id="slider" onclick="show_menu()">
+    <div class="menu" onload="slider_pos()" id="menu" hx-post='/load-menu?clasa={{.}}' hx-trigger='load' hx-swap='outerHTML'>
+      <div class="slider" id="slider" onclick="show_menu()" >
         <div class="arrow-left"></div>
         <div class="arrow-right"></div>
       </div>
