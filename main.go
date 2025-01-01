@@ -13,6 +13,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type Input3 struct {
+	Aux1, Aux2, Aux3 string
+}
+
 var db *sql.DB = dbh.Connect_db()
 
 func exeIndex(w http.ResponseWriter, r *http.Request) {
@@ -20,14 +24,16 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 	param, _ := url.ParseQuery(my_url.RawQuery)
 
 	unit := param.Get("clasa")
+	less := param.Get("lectie")
+
+	var in Input3
+	in.Aux1 = unit
+	in.Aux2 = unit
+	in.Aux3 = less
 
 	var filename = "index.html"
-	t, err := template.ParseFiles(filename)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	err = t.ExecuteTemplate(w, filename, unit)
+	t := template.Must(template.ParseFiles(filename))
+	err := t.ExecuteTemplate(w, filename, in)
 	if err != nil {
 		panic(err.Error())
 	}
