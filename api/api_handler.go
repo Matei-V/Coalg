@@ -16,7 +16,7 @@ func Load_menu(w http.ResponseWriter, r *http.Request) {
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
 	unit := param.Get("clasa")
-	htmlStr := "template/menu_tmp.html"
+	htmlStr := "static/menu_tmp.html"
 	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, unit)
 }

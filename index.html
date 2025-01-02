@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>cO(alg)</title>
 
-  <link href="template/css/style.css" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
 
   <script>
     var menu_tog = false;
@@ -28,7 +28,7 @@
 
     function slider_pos() {
       var menu_width = document.getElementById("menu").offsetWidth;
-      document.getElementById("slider").style.left ="220px";
+      document.getElementById("slider").style.left = "220px";
       console.log(menu_width);
     }
   </script>
@@ -36,13 +36,32 @@
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
-<body >
+<body>
   <div class="header">
     <p>
-    <div class='header-section'><a href="">cOalg</a></div>
-    <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
-    <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
-    <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
+    <p class='align-left'>
+      <div class='header-section'><a href="">cOalg</a></div>
+      <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
+      <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
+      <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
+    </p>
+    <div class='align-right'>
+      <div class='header-section' id='add_page'>
+        <a href="/add-page">
+          <img src="static/images/add_page.png" alt="nu e taticule">
+        </a>
+      </div>
+      <div class='header-section'>
+        <a href="https://github.com/Matei-V/Coalg">
+          <img src="static/images/github-logo.png" alt="nu e taticule">
+        </a>
+      </div> 
+      <div class='header-section'>
+        <a href="/registre">
+          <img src="static/images/acc-logo.png" alt="nu e taticule">
+        </a>
+      </div>
+    </div>
     </p>
   </div>
 
@@ -50,14 +69,16 @@
 
   <div class="main" id="main">
     <div class="separator"></div>
-    <div class="menu" onload="slider_pos()" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load' hx-swap='outerHTML'>
-      <div class="slider" id="slider" onclick="show_menu()" >
+    <div class="menu" onload="slider_pos()" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load'
+      hx-swap='outerHTML'>
+      <div class="slider" id="slider" onclick="show_menu()">
         <div class="arrow-left"></div>
         <div class="arrow-right"></div>
       </div>
     </div>
 
-    <div id="content" style="position:relative; left:240px" hx-get='/load-lesson?clasa={{.Aux2}}&lectie={{.Aux3}}' hx-trigger='load' hx-swap='outerHTML'>
+    <div id="content" style="position:relative; left:240px" hx-get='/load-lesson?clasa={{.Aux2}}&lectie={{.Aux3}}'
+      hx-trigger='load' hx-swap='outerHTML'>
     </div>
 
 
