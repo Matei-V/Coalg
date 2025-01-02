@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	api "mysql_drive/api"
+	"mysql_drive/backend/auth"
 	dbh "mysql_drive/backend/db_handler"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -40,16 +41,24 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func exePageadd(w http.ResponseWriter, r *http.Request) {
-	var filename = "add_page.html"
+	var filename = "static/pages/add_page.html"
 	t, err := template.ParseFiles(filename)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	err = t.ExecuteTemplate(w, filename, nil)
+	t.Execute(w, nil)
+}
+
+func exeRegister(w http.ResponseWriter, r *http.Request) {
+	var filename = "static/pages/register.html"
+	t, err := template.ParseFiles(filename)
 	if err != nil {
 		panic(err.Error())
 	}
+
+	t.Execute(w, nil)
+
 }
 
 func addPage(w http.ResponseWriter, r *http.Request) {
@@ -114,6 +123,7 @@ func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
 	http.HandleFunc("/get-menu", api.Write_menu)
 	http.HandleFunc("/add-page", exePageadd)
+	http.HandleFunc("/register-page", exeRegister)
 	http.HandleFunc("/add_new_page", addPage)
 	http.HandleFunc("/load-lesson", api.Load_lesson)
 	http.HandleFunc("/load-chapters", api.Load_chapters)
@@ -123,6 +133,10 @@ func add_ApiHandlers() {
 	http.HandleFunc("/update_nr_res", api.Update_nr_res)
 	http.HandleFunc("/add_pb", api.Add_pb)
 	http.HandleFunc("/update_nr_pb", api.Update_nr_pb)
+	http.HandleFunc("/register", auth.Register)
+	http.HandleFunc("/login", auth.Login)
+	http.HandleFunc("/logout", auth.Logout)
+	http.HandleFunc("/protected", auth.Protected)
 }
 
 func main() {
