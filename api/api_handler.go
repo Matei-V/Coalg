@@ -59,7 +59,7 @@ func Load_chapters(w http.ResponseWriter, r *http.Request) {
 		htmlStr += "<option value='" + id[i] + caps[i] + "' >" + caps[i] + "</option>"
 	}
 
-	htmlStr += "</option>"
+	htmlStr += "</select>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
 
 	tmpl.Execute(w, nil)
@@ -87,10 +87,15 @@ func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
 func Add_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
 	nr_res++
-	htmlStr := "<input class='text-input' type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
-	htmlStr += "<input class='text-input' type='text' placeholder='link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' ><br>\n"
+	htmlStr := "<div class='res-input_" + strconv.Itoa(nr_res) + "'>"
+	htmlStr += "<input class='text-input' type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
+	htmlStr += "<input class='text-input' type='text' placeholder='Link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' >\n"
+	htmlStr += "<span class='crosssign' hx-get='/delete-res' hx-target='.res-input_" + strconv.Itoa(nr_res) + "' hx-swap='delete' hx-trigger='click'>"
+	htmlStr += "<div class='crosssign_circle'></div><div class='crosssign_stem'></div><div class='crosssign_stem2'></div></span><br>"
 
+	htmlStr += "</div>"
 	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
+
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }
@@ -105,10 +110,15 @@ func Update_nr_res(w http.ResponseWriter, r *http.Request) {
 func Add_pb(w http.ResponseWriter, r *http.Request) {
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
 	nr_pb++
-	htmlStr := "<input class='text-input' type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' >\n"
-	htmlStr += "<input class='text-input' type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' ><br>\n"
+	htmlStr := "<div class='pb-input_" + strconv.Itoa(nr_pb) + "'>"
+	htmlStr += "<input class='text-input' type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' >\n"
+	htmlStr += "<input class='text-input' type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' >\n"
+	htmlStr += "<span class='crosssign' hx-get='/delete-pb' hx-target='.pb-input_" + strconv.Itoa(nr_pb) + "' hx-swap='delete' hx-trigger='click'>"
+	htmlStr += "<div class='crosssign_circle'></div><div class='crosssign_stem'></div><div class='crosssign_stem2'></div></span><br>"
 
+	htmlStr += "</div>"
 	htmlStr += "<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
+
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }
@@ -119,7 +129,6 @@ func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, nil)
 }
-
 func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
