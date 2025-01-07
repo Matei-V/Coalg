@@ -22,7 +22,6 @@ func Load_menu(w http.ResponseWriter, r *http.Request) {
 }
 
 func Write_menu(w http.ResponseWriter, r *http.Request) {
-
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
 

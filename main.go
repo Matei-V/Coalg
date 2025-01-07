@@ -38,10 +38,12 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err.Error())
 	}
+
 }
 
 func exePageadd(w http.ResponseWriter, r *http.Request) {
 	var filename = "static/pages/add_page.html"
+
 	t, err := template.ParseFiles(filename)
 	if err != nil {
 		panic(err.Error())
@@ -59,6 +61,16 @@ func exeRegister(w http.ResponseWriter, r *http.Request) {
 
 	t.Execute(w, nil)
 
+}
+
+func exeLogin(w http.ResponseWriter, r *http.Request) {
+	var filename = "static/pages/login.html"
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	t.Execute(w, nil)
 }
 
 func addPage(w http.ResponseWriter, r *http.Request) {
@@ -124,6 +136,7 @@ func add_ApiHandlers() {
 	http.HandleFunc("/get-menu", api.Write_menu)
 	http.HandleFunc("/add-page", exePageadd)
 	http.HandleFunc("/register-page", exeRegister)
+	http.HandleFunc("/login-page", exeLogin)
 	http.HandleFunc("/add_new_page", addPage)
 	http.HandleFunc("/load-lesson", api.Load_lesson)
 	http.HandleFunc("/load-chapters", api.Load_chapters)
@@ -136,7 +149,6 @@ func add_ApiHandlers() {
 	http.HandleFunc("/register", auth.Register)
 	http.HandleFunc("/login", auth.Login)
 	http.HandleFunc("/logout", auth.Logout)
-	http.HandleFunc("/protected", auth.Protected)
 }
 
 func main() {
