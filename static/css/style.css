@@ -183,3 +183,29 @@ img {
   right: 0px;
   height: 100%;
 }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 100px;
+  z-index: 7;
+}
+
+.dropdown-content a {
+  display: inline-block;
+  right: 10vw;
+  background-color:#394047;
+  top: 33px;
+  font-size: 15px;
+  height: 20px;
+  min-width: 160px;
+  text-align: center;
+}
+
+
+.dropdown-content a:hover {
+  background-color: #66737f;
+}
+
+#auth:hover .dropdown-content {display: block;}
+

@@ -1,0 +1,13 @@
+<div class='res-input_{{.}}'>
+  <input class='text-input' type='text' placeholder='Nume Resursa' name='res_{{.}}'>
+  <input class='text-input' type='text' placeholder='Link Resursa' name='link_res_{{.}}'>
+  <span class='crosssign' hx-get='/delete-res' hx-target='.res-input_{{.}}' hx-swap='delete'
+    hx-trigger='click'>
+    <div class='crosssign_circle'></div>
+    <div class='crosssign_stem'></div>
+    <div class='crosssign_stem2'></div>
+  </span><br>
+
+</div>
+<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res'
+  value='{{.}}'>

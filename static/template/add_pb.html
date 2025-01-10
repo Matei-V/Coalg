@@ -1,0 +1,13 @@
+<div class='pb-input_{{.}}'>
+  <input class='text-input' type='text' placeholder='Nume Problema' name='pb_{{.}}'>
+  <input class='text-input' type='text' placeholder='Link Problema' name='link_pb_{{.}}'>
+  <span class='crosssign' hx-get='/delete-pb' hx-target='.pb-input_{{.}}' hx-swap='delete'
+    hx-trigger='click'>
+    <div class='crosssign_circle'></div>
+    <div class='crosssign_stem'></div>
+    <div class='crosssign_stem2'></div>
+  </span><br>
+
+</div>
+<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb'
+  value='{{.}}'>

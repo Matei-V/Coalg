@@ -39,7 +39,7 @@
 <body>
   <div class="header">
     <div class='align-left'>
-      <div class='header-section'><a href="">cOalg</a></div>
+      <div class='header-section'><a href="/">cOalg</a></div>
       <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
       <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
       <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
@@ -50,15 +50,19 @@
           <img src="static/images/add_page.png" alt="nu e taticule">
         </a>
       </div>
-      <div class='header-section'>
+      <div class='header-section' id='github'>
         <a href="https://github.com/Matei-V/Coalg">
           <img src="static/images/github-logo.png" alt="nu e taticule">
         </a>
-      </div> 
-      <div class='header-section'>
-        <a href="/register-page">
+      </div>
+      <div class='header-section' id='auth'>
+        <a id='authbtn' href="/login-page">
           <img src="static/images/acc-logo.png" alt="nu e taticule">
         </a>
+        <div class="dropdown-content">
+          <a href="/login-page">Login</a>
+          <a href="/register-page">Register</a>
+        </div>
       </div>
     </div>
     </p>
@@ -68,8 +72,7 @@
 
   <div class="main" id="main">
     <div class="separator"></div>
-    <div class="menu" onload="slider_pos()" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load'
-      hx-swap='outerHTML'>
+    <div class="menu" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load' hx-swap='outerHTML'>
       <div class="slider" id="slider" onclick="show_menu()">
         <div class="arrow-left"></div>
         <div class="arrow-right"></div>

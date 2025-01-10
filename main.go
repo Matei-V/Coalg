@@ -43,13 +43,25 @@ func exeIndex(w http.ResponseWriter, r *http.Request) {
 
 func exePageadd(w http.ResponseWriter, r *http.Request) {
 	var filename = "static/pages/add_page.html"
+	if err := auth.Authorize(r); err == nil {
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
 
+		t.Execute(w, nil)
+		return
+	}
+
+	filename = "static/pages/unauthorized.html"
 	t, err := template.ParseFiles(filename)
 	if err != nil {
 		panic(err.Error())
 	}
 
 	t.Execute(w, nil)
+	return
+
 }
 
 func exeRegister(w http.ResponseWriter, r *http.Request) {
@@ -156,5 +168,5 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	http.HandleFunc("/", exeIndex)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8000", nil)
 }

@@ -46,57 +46,48 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 }
 
 func Load_chapters(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "<select class='text-input' name='capitol'>"
-	caps, id := dbh.Get_Chapters(db, "9")
-	aux, aux_id := dbh.Get_Chapters(db, "10")
-	caps = append(caps, aux...)
-	id = append(id, aux_id...)
-	aux, aux_id = dbh.Get_Chapters(db, "11")
-	caps = append(caps, aux...)
-	id = append(id, aux_id...)
-	for i := 0; i < len(caps); i++ {
-		htmlStr += "<option value='" + id[i] + caps[i] + "' >" + caps[i] + "</option>"
+	type In struct {
+		Caps, Id string
 	}
 
-	htmlStr += "</select>"
-	tmpl, _ := template.New("t").Parse(htmlStr)
+	var Input []In
 
-	tmpl.Execute(w, nil)
+	aux, aux_id := dbh.Get_Chapters(db, "9")
+	for i := 0; i < len(aux); i++ {
+		Input = append(Input, In{Caps: aux[i], Id: aux_id[i]})
+	}
+
+	aux, aux_id = dbh.Get_Chapters(db, "10")
+	for i := 0; i < len(aux); i++ {
+		Input = append(Input, In{Caps: aux[i], Id: aux_id[i]})
+	}
+
+	aux, aux_id = dbh.Get_Chapters(db, "11")
+	for i := 0; i < len(aux); i++ {
+		Input = append(Input, In{Caps: aux[i], Id: aux_id[i]})
+	}
+	htmlStr := "static/template/select_chapters.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
+	tmpl.Execute(w, Input)
 }
 
 func Add_new_chapter(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "<input class='text-input' type='text' name='capitol' placeholder='Capitol'>\n"
-	htmlStr += "<button class='button' hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add to exsisting Chapter</button>\n"
-	htmlStr += "<input type='hidden' name='add-cap' value='true'>"
-
-	tmpl, _ := template.New("t").Parse(htmlStr)
-
+	htmlStr := "static/template/new_chapter.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, nil)
 }
 
 func Add_to_existing_chapter(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "<div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>\n"
-	htmlStr += "<button class='button' hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>"
-	htmlStr += "<input type='hidden' name='add-cap' value='false'>"
-
-	tmpl, _ := template.New("t").Parse(htmlStr)
+	htmlStr := "static/template/ex_chapter.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, nil)
 }
-
 func Add_res(w http.ResponseWriter, r *http.Request) {
 	nr_res, _ := strconv.Atoi(r.PostFormValue("nr_res"))
 	nr_res++
-	htmlStr := "<div class='res-input_" + strconv.Itoa(nr_res) + "'>"
-	htmlStr += "<input class='text-input' type='text' placeholder='Nume Resursa' name='res_" + strconv.Itoa(nr_res) + "' >\n"
-	htmlStr += "<input class='text-input' type='text' placeholder='Link Resursa' name='link_res_" + strconv.Itoa(nr_res) + "' >\n"
-	htmlStr += "<span class='crosssign' hx-get='/delete-res' hx-target='.res-input_" + strconv.Itoa(nr_res) + "' hx-swap='delete' hx-trigger='click'>"
-	htmlStr += "<div class='crosssign_circle'></div><div class='crosssign_stem'></div><div class='crosssign_stem2'></div></span><br>"
-
-	htmlStr += "</div>"
-	htmlStr += "<input class='nr_res' type='hidden' hx-post='/update_nr_res' hx-trigger='load' hx-swap='outerHTML' name='nr_res' value='" + strconv.Itoa(nr_res) + "'>"
-
-	tmpl, _ := template.New("t").Parse(htmlStr)
-	tmpl.Execute(w, nil)
+	htmlStr := "static/template/add_res.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
+	tmpl.Execute(w, strconv.Itoa(nr_res))
 }
 
 func Update_nr_res(w http.ResponseWriter, r *http.Request) {
@@ -109,17 +100,9 @@ func Update_nr_res(w http.ResponseWriter, r *http.Request) {
 func Add_pb(w http.ResponseWriter, r *http.Request) {
 	nr_pb, _ := strconv.Atoi(r.PostFormValue("nr_pb"))
 	nr_pb++
-	htmlStr := "<div class='pb-input_" + strconv.Itoa(nr_pb) + "'>"
-	htmlStr += "<input class='text-input' type='text' placeholder='Nume Problema' name='pb_" + strconv.Itoa(nr_pb) + "' >\n"
-	htmlStr += "<input class='text-input' type='text' placeholder='Link Problema' name='link_pb_" + strconv.Itoa(nr_pb) + "' >\n"
-	htmlStr += "<span class='crosssign' hx-get='/delete-pb' hx-target='.pb-input_" + strconv.Itoa(nr_pb) + "' hx-swap='delete' hx-trigger='click'>"
-	htmlStr += "<div class='crosssign_circle'></div><div class='crosssign_stem'></div><div class='crosssign_stem2'></div></span><br>"
-
-	htmlStr += "</div>"
-	htmlStr += "<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='" + strconv.Itoa(nr_pb) + "'>"
-
-	tmpl, _ := template.New("t").Parse(htmlStr)
-	tmpl.Execute(w, nil)
+	htmlStr := "static/template/add_pb.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
+	tmpl.Execute(w, strconv.Itoa(nr_pb))
 }
 
 func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
@@ -134,7 +117,6 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	title := param.Get("lectie")
 
 	if title == "" {
-
 		htmlStr := "<div id='content' style='position:relative; left:240px'>"
 		htmlStr += "</div>"
 

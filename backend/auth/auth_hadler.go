@@ -21,7 +21,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, _ := hashPassword(password)
 
 	dbh.Add_User(db, username, hashedPassword, "")
+
 	fmt.Fprintln(w, "Register succesful")
+	http.Redirect(w, r, "index.html", http.StatusSeeOther)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -43,8 +45,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 
+	http.SetCookie(w, &http.Cookie{
+		Name:     "username",
+		Value:    username,
+		Expires:  time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+	})
 	dbh.Add_Session_Token(db, username, sessionToken)
-	fmt.Fprintln(w, "loged in")
+	fmt.Print("loged in\n")
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
@@ -62,20 +70,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func Authorize(r *http.Request) error {
-	username := r.FormValue("username")
-	user, ok := dbh.Get_User(db, username)
+	username, _ := r.Cookie("username")
+	user, ok := dbh.Get_User(db, username.Value)
 	if !ok {
 		return errors.New("user not found")
 	}
 
 	st, err := r.Cookie("session_token")
 	if err != nil || st.Value == "" || st.Value != user.SessionToken {
-		return errors.New("Unauthorized")
-	}
-
-	csrf := r.Header.Get("X-CSRF-Token")
-	fmt.Print("csrf: " + csrf + "\n")
-	if csrf != user.CSRFToken || csrf == "" {
 		return errors.New("Unauthorized")
 	}
 
