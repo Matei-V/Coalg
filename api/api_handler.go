@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"mysql_drive/backend/auth"
 	dbh "mysql_drive/backend/db_handler"
 )
 
@@ -128,7 +129,7 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	desc := dbh.Get_pag(db, title)
 	titlu_res, link_res := dbh.Get_res(db, title)
 	htmlStr := "<div id='content' style='position:relative; left:240px'>"
-	htmlStr += "<h3>" + title + "</h3>"
+	htmlStr += "<)3>" + title + "</h3>"
 	htmlStr += desc
 	htmlStr += "<br>"
 
@@ -145,5 +146,17 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 
 	htmlStr += "</div>"
 	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, nil)
+}
+
+func Auth_cont(w http.ResponseWriter, r *http.Request) {
+	if err := auth.Authorize(r); err == nil {
+		htmlStr := "static/template/acc_auth_cont.html"
+		tmpl, _ := template.ParseFiles(htmlStr)
+		tmpl.Execute(w, nil)
+		return
+	}
+	htmlStr := "static/template/acc_unauth_cont.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, nil)
 }

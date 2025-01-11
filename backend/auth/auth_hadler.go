@@ -23,13 +23,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	dbh.Add_User(db, username, hashedPassword, "")
 
 	fmt.Fprintln(w, "Register succesful")
-	http.Redirect(w, r, "index.html", http.StatusSeeOther)
+	http.Redirect(w, r, "/", 301)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
-
+	fmt.Print(username + password + "\n")
 	user, ok := dbh.Get_User(db, username)
 	if !ok || !checkPasswordHash(password, user.HashedPassword) {
 		fmt.Fprintln(w, "login unsuccesful")
@@ -52,7 +52,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 	dbh.Add_Session_Token(db, username, sessionToken)
-	fmt.Print("loged in\n")
+	http.Redirect(w, r, "/", 301)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
@@ -66,11 +66,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	})
 
 	dbh.Add_Session_Token(db, username.Value, "")
-	fmt.Fprintln(w, "loged out")
+	http.Redirect(w, r, "/", 302)
 }
 
 func Authorize(r *http.Request) error {
-	username, _ := r.Cookie("username")
+	username, err := r.Cookie("username")
+	if err != nil {
+		return errors.New("user not found")
+	}
 	user, ok := dbh.Get_User(db, username.Value)
 	if !ok {
 		return errors.New("user not found")

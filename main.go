@@ -20,6 +20,10 @@ type Input3 struct {
 
 var db *sql.DB = dbh.Connect_db()
 
+func redirect(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/", 302)
+}
+
 func exeIndex(w http.ResponseWriter, r *http.Request) {
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
@@ -161,6 +165,7 @@ func add_ApiHandlers() {
 	http.HandleFunc("/register", auth.Register)
 	http.HandleFunc("/login", auth.Login)
 	http.HandleFunc("/logout", auth.Logout)
+	http.HandleFunc("/auth-cont", api.Auth_cont)
 }
 
 func main() {

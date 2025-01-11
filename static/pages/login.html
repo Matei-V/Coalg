@@ -45,7 +45,7 @@
   <div class="main" id="main" style="position:relative;left:100px">
     <div class="separator"></div>
     <br>
-    <form action='http://localhost:8080/' hx-post='/login' hx-swap='none'>
+    <form action='/login' hx-post='/login' hx-target='body'>
       <input class='text-input' type="text" name="username" placeholder='Username'><br>
       <input class='text-input' type="text" name="password" placeholder='Password'><br>
       <input class='button' type="submit" value="Submit">
