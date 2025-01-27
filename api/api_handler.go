@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -34,10 +35,13 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		htmlStr += "<h3 class='capitol'>" + caps[i] + "</h3>"
-		less := dbh.Get_Lessons(db, i+1)
+		less, id := dbh.Get_Lessons(db, i+1)
 		for j := 0; j < len(less); j++ {
-			htmlStr += "<a href='/unit?clasa=" + unit + "&lectie=" + less[j] + "'>" + less[j]
-			htmlStr += "</a><br>"
+			param := url.Values{}
+			param.Add("clasa", unit)
+			param.Add("id", id[j])
+			htmlStr += "<div class='less'><a href='/unit?" + param.Encode() + "'>" + less[j]
+			htmlStr += "</a></div>"
 		}
 	}
 
@@ -115,9 +119,9 @@ func Update_nr_pb(w http.ResponseWriter, r *http.Request) {
 func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
-	title := param.Get("lectie")
-
-	if title == "" {
+	id := param.Get("id")
+	fmt.Println(r.URL)
+	if id == "" {
 		htmlStr := "<div id='content' style='position:relative; left:240px'>"
 		htmlStr += "</div>"
 
@@ -126,20 +130,25 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	desc := dbh.Get_pag(db, title)
-	titlu_res, link_res := dbh.Get_res(db, title)
+	desc := dbh.Get_pag(db, id)
+	title := dbh.Get_title(db, id)
+	titlu_res, link_res := dbh.Get_res(db, id)
 	htmlStr := "<div id='content' style='position:relative; left:240px'>"
-	htmlStr += "<)3>" + title + "</h3>"
+	htmlStr += "<h3>" + title + "</h3>"
 	htmlStr += desc
 	htmlStr += "<br>"
 
-	htmlStr += "<h3>Resursa</h3>"
+	if len(titlu_res) > 0 {
+		htmlStr += "<h3>Resursa</h3>"
+	}
 	for i := 0; i < len(titlu_res); i++ {
 		htmlStr += "<a href='" + link_res[i] + "'>" + titlu_res[i] + "</a><br>"
 	}
 
-	titlu_pb, link_pb := dbh.Get_pb(db, title)
-	htmlStr += "<h3>Problema</h3>"
+	titlu_pb, link_pb := dbh.Get_pb(db, id)
+	if len(titlu_pb) > 0 {
+		htmlStr += "<h3>Problema</h3>"
+	}
 	for i := 0; i < len(titlu_pb); i++ {
 		htmlStr += "<a href='" + link_pb[i] + "'>" + titlu_pb[i] + "</a><br>"
 	}
@@ -159,4 +168,28 @@ func Auth_cont(w http.ResponseWriter, r *http.Request) {
 	htmlStr := "static/template/acc_unauth_cont.html"
 	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, nil)
+}
+
+func MyAcc(w http.ResponseWriter, r *http.Request) {
+	username, _ := r.Cookie("username")
+
+	fmt.Print("A: " + username.Value + "\n")
+	less, id_cap := dbh.Get_Lessons_Auth(db, username.Value)
+
+	for i := 0; i < len(id_cap); i++ {
+		fmt.Print("unit: " + id_cap[i] + "\n")
+	}
+
+	type Input struct {
+		Less string
+		Cap  string
+	}
+	var In []Input
+	for i := 0; i < len(less); i++ {
+		In = append(In, Input{less[i], "9"})
+		fmt.Print(less[i] + "\n")
+	}
+	htmlStr := "static/template/less_list.html"
+	tmpl, _ := template.ParseFiles(htmlStr)
+	tmpl.Execute(w, In)
 }

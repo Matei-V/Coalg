@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cO(alg)</title>
+
+  <link href="static/css/style.css" rel="stylesheet">
+
+  <script src='static/scripts/script.js'></script>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+</head>
+
+<body>
+  <div class="header">
+    <div class='align-left'>
+      <div class='header-section'><a href="/">cOalg</a></div>
+      <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
+      <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
+      <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
+    </div>
+    <div class='align-right'>
+      <div class='header-section' id='add_page'>
+        <a href="/add-page">
+          <img src="static/images/add_page.png" alt="nu e taticule">
+        </a>
+      </div>
+      <div class='header-section' id='github'>
+        <a href="https://github.com/Matei-V/Coalg">
+          <img src="static/images/github-logo.png" alt="nu e taticule">
+        </a>
+      </div>
+      <div class='header-section' id='auth'>
+        <a id='authbtn' href="/login-page">
+          <img src="static/images/acc-logo.png" alt="nu e taticule">
+        </a>
+        <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
+          <a href="/login-page">Login</a>
+          <a href="/register-page">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="main" id="main">
+    <div class="separator"></div>
+    <div class="menu" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load' hx-swap='outerHTML'>
+      <div class="slider" id="slider" onload="slider_pos()">
+        <div class="arrow-left"></div>
+        <div class="arrow-right"></div>
+      </div>
+    </div>
+
+    <div id="content" style="position:relative; left:240px" hx-get='/load-lesson?clasa={{.Aux2}}&id={{.Aux3}}'
+      hx-trigger='load' hx-swap='outerHTML'>
+    </div>
+
+
+  </div>
+
+  <div class="footer">
+
+  </div>
+
+</body>
+
+</html>

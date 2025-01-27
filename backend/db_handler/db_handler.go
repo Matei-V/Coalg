@@ -37,7 +37,7 @@ type prob struct {
 	limba string
 }
 
-func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool, r []res, insert_res bool, pb []prob, insert_pb bool) {
+func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool, r []res, insert_res bool, pb []prob, insert_pb bool, autor string) {
 	if insert_chap {
 		insert, err := db.Query("insert into capitol(titlu, id_unit) values(?, ?)", c.titlu, u.id_unit)
 		if err != nil {
@@ -47,7 +47,7 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_pag {
 		id_c := strconv.Itoa(c.id_cap)
-		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere) values(?, ?, ?)", p.titlu, id_c, p.descriere)
+		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere, autor) values(?, ?, ?, ?)", p.titlu, id_c, p.descriere, autor)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -118,8 +118,8 @@ func Get_Chapters(db *sql.DB, unit string) ([]string, []string) {
 	return clmn, id
 }
 
-func Get_Lessons(db *sql.DB, id_cap int) []string {
-	var clmn []string
+func Get_Lessons(db *sql.DB, id_cap int) ([]string, []string) {
+	var clmn, id []string
 	row_num := Last_id(db, "pagina", "id_pag")
 	for i := 0; i < row_num; i++ {
 		var ans string
@@ -128,21 +128,18 @@ func Get_Lessons(db *sql.DB, id_cap int) []string {
 		row.Scan(&ans)
 		if ans != "" {
 			clmn = append(clmn, ans)
+			id = append(id, strconv.Itoa(i+1))
 		}
 	}
-	return clmn
+	return clmn, id
 }
 
-func Get_res(db *sql.DB, titlu string) ([]string, []string) {
-	var id_pag, nr_res string
+func Get_res(db *sql.DB, id_pag string) ([]string, []string) {
+	var nr_res string
 	var titlu_res, link []string
 	var aux string
-	stmt := "select id_pag from pagina where titlu='" + titlu + "';"
+	stmt := "select count(*) from resursa where id_pag='" + id_pag + "';"
 	row := db.QueryRow(stmt)
-	row.Scan(&id_pag)
-
-	stmt = "select count(*) from resursa where id_pag='" + id_pag + "';"
-	row = db.QueryRow(stmt)
 	row.Scan(&nr_res)
 
 	n, _ := strconv.Atoi(nr_res)
@@ -163,16 +160,12 @@ func Get_res(db *sql.DB, titlu string) ([]string, []string) {
 
 }
 
-func Get_pb(db *sql.DB, titlu string) ([]string, []string) {
-	var id_pag, nr_pb string
+func Get_pb(db *sql.DB, id_pag string) ([]string, []string) {
+	var nr_pb string
 	var titlu_pb, link []string
 	var aux string
-	stmt := "select id_pag from pagina where titlu='" + titlu + "';"
+	stmt := "select count(*) from problema where id_pag='" + id_pag + "';"
 	row := db.QueryRow(stmt)
-	row.Scan(&id_pag)
-
-	stmt = "select count(*) from problema where id_pag='" + id_pag + "';"
-	row = db.QueryRow(stmt)
 	row.Scan(&nr_pb)
 
 	n, _ := strconv.Atoi(nr_pb)
@@ -192,6 +185,15 @@ func Get_pb(db *sql.DB, titlu string) ([]string, []string) {
 	return titlu_pb, link
 
 }
+
+func Get_title(db *sql.DB, id_pag string) string {
+	var aux string
+	stmt := "select titlu from pagina where id_pag='" + id_pag + "';"
+	row := db.QueryRow(stmt)
+	row.Scan(&aux)
+	return aux
+}
+
 func Create_chap(id_cap int, titlu string) chap {
 	var ans chap
 	ans.id_cap = id_cap
@@ -242,10 +244,10 @@ func Create_pb(id_pb []int, titlu []string, link []string) []prob {
 	return ans
 }
 
-func Get_pag(db *sql.DB, titlu string) string {
+func Get_pag(db *sql.DB, id_pag string) string {
 	var ans string
 
-	stmt := "select descriere from pagina where titlu='" + titlu + "';"
+	stmt := "select descriere from pagina where id_pag='" + id_pag + "';"
 	row := db.QueryRow(stmt)
 	row.Scan(&ans)
 	return ans

@@ -13,7 +13,7 @@
 <body>
   <div class="header">
     <div class='align-left'>
-      <div class='header-section'><a href="">cOalg</a></div>
+      <div class='header-section'><a href="/">cOalg</a></div>
       <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
       <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
       <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
@@ -24,32 +24,26 @@
           <img src="static/images/add_page.png" alt="nu e taticule">
         </a>
       </div>
-      <div class='header-section'>
+      <div class='header-section' id='github'>
         <a href="https://github.com/Matei-V/Coalg">
           <img src="static/images/github-logo.png" alt="nu e taticule">
         </a>
-      </div> 
+      </div>
       <div class='header-section' id='auth'>
         <a id='authbtn' href="/login-page">
           <img src="static/images/acc-logo.png" alt="nu e taticule">
         </a>
-        <div class="dropdown-content">
+        <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
           <a href="/login-page">Login</a>
           <a href="/register-page">Register</a>
         </div>
-      </div>    </div>
-    </p>
+      </div>
+    </div>
   </div>
 
   <div class="main" id="main" style="position:relative; left:240px">
     <div class="separator"></div>
     <form hx-post="/add_new_page">
-      <select class='text-input' name="unitate">
-        <option value="9">Clasa a 9-a</option>
-        <option value="10">Clasa a 10-a</option>
-        <option value="11">Clasa a 11-a</option>
-        <option value="12">Clasa a 12-a</option>
-      </select>
       <br>
       <div class="Chapter">
         <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>

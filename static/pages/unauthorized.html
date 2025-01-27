@@ -59,13 +59,12 @@
         <a id='authbtn' href="/login-page">
           <img src="static/images/acc-logo.png" alt="nu e taticule">
         </a>
-        <div class="dropdown-content">
+        <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
           <a href="/login-page">Login</a>
           <a href="/register-page">Register</a>
         </div>
       </div>
     </div>
-    </p>
   </div>
 
 

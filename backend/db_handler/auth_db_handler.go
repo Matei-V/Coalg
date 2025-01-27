@@ -3,6 +3,7 @@ package db_handler
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 )
 
 type User struct {
@@ -69,4 +70,30 @@ func Get_User_Password(db *sql.DB, name string) string {
 		panic(err.Error())
 	}
 	return ans
+}
+func Get_Lessons_Auth(db *sql.DB, username string) ([]string, []string) {
+	var clmn, id_cap []string
+	row_num := Last_id(db, "pagina", "id_pag")
+	for i := 0; i < row_num; i++ {
+		var ans string
+		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and autor='" + username + "';"
+		row := db.QueryRow(stmt)
+		row.Scan(&ans)
+		fmt.Print(ans + "\n")
+		if ans != "" {
+			clmn = append(clmn, ans)
+		}
+	}
+	for i := 0; i < len(clmn); i++ {
+		var ans string
+		stmt := "select id_unit from capitol where id_cap=(select id_cap from pagina where titlu='" + clmn[i] + "')"
+		row := db.QueryRow(stmt)
+		row.Scan(&ans)
+		fmt.Print("ans: " + ans + "\n")
+		if ans != "" {
+			id_cap = append(id_cap, ans)
+		}
+	}
+
+	return clmn, id_cap
 }

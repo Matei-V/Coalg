@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"html/template"
 	dbh "mysql_drive/backend/db_handler"
 	"net/http"
 	"time"
@@ -20,9 +21,42 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	hashedPassword, _ := hashPassword(password)
 
+	if len(username) < 4 {
+		In := "Nume de utilizator prea scurt"
+		var filename = "static/pages/login.html"
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		t.Execute(w, In)
+		return
+	}
+	if len(password) < 8 {
+		In := "Parola prea scurta"
+		var filename = "static/pages/login.html"
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		t.Execute(w, In)
+		return
+	}
+	_, ok := dbh.Get_User(db, username)
+	if ok != true {
+		In := "Nume de utilizator deja existent"
+		var filename = "static/pages/login.html"
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		t.Execute(w, In)
+		return
+	}
 	dbh.Add_User(db, username, hashedPassword, "")
 
-	fmt.Fprintln(w, "Register succesful")
 	http.Redirect(w, r, "/", 301)
 }
 
@@ -32,10 +66,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Print(username + password + "\n")
 	user, ok := dbh.Get_User(db, username)
 	if !ok || !checkPasswordHash(password, user.HashedPassword) {
-		fmt.Fprintln(w, "login unsuccesful")
+		In := "Nume sau parola gresite;"
+		var filename = "static/pages/login.html"
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		t.Execute(w, In)
 		return
 	}
-
 	sessionToken := generateToken(32)
 
 	http.SetCookie(w, &http.Cookie{
@@ -52,7 +92,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 	dbh.Add_Session_Token(db, username, sessionToken)
-	http.Redirect(w, r, "/", 301)
+	http.Redirect(w, r, "/", 302)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

@@ -65,25 +65,14 @@
         </div>
       </div>
     </div>
-    </p>
   </div>
 
 
 
   <div class="main" id="main">
-    <div class="separator"></div>
-    <div class="menu" id="menu" hx-post='/load-menu?clasa={{.Aux1}}' hx-trigger='load' hx-swap='outerHTML'>
-      <div class="slider" id="slider" onclick="show_menu()">
-        <div class="arrow-left"></div>
-        <div class="arrow-right"></div>
-      </div>
-    </div>
-
     <div id="content" style="position:relative; left:240px" hx-get='/load-lesson?clasa={{.Aux2}}&lectie={{.Aux3}}'
       hx-trigger='load' hx-swap='outerHTML'>
     </div>
-
-
   </div>
 
   <div class="footer">

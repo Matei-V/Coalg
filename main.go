@@ -20,25 +20,10 @@ type Input3 struct {
 
 var db *sql.DB = dbh.Connect_db()
 
-func redirect(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/", 302)
-}
-
 func exeIndex(w http.ResponseWriter, r *http.Request) {
-	my_url, _ := url.Parse(r.URL.String())
-	param, _ := url.ParseQuery(my_url.RawQuery)
-
-	unit := param.Get("clasa")
-	less := param.Get("lectie")
-
-	var in Input3
-	in.Aux1 = unit
-	in.Aux2 = unit
-	in.Aux3 = less
-
 	var filename = "index.html"
 	t := template.Must(template.ParseFiles(filename))
-	err := t.ExecuteTemplate(w, filename, in)
+	err := t.ExecuteTemplate(w, filename, nil)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -76,7 +61,27 @@ func exeRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t.Execute(w, nil)
+}
 
+func exeUnit(w http.ResponseWriter, r *http.Request) {
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+
+	unit := param.Get("clasa")
+	less := param.Get("id")
+
+	var in Input3
+	in.Aux1 = unit
+	in.Aux2 = unit
+	in.Aux3 = less
+
+	var filename = "static/pages/unit.html"
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	t.Execute(w, in)
 }
 
 func exeLogin(w http.ResponseWriter, r *http.Request) {
@@ -88,9 +93,18 @@ func exeLogin(w http.ResponseWriter, r *http.Request) {
 
 	t.Execute(w, nil)
 }
+func exeAcc(w http.ResponseWriter, r *http.Request) {
+	var filename = "static/pages/account.html"
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		panic(err.Error())
+	}
 
+	t.Execute(w, nil)
+}
 func addPage(w http.ResponseWriter, r *http.Request) {
 	id_unitate, _ := strconv.Atoi(r.PostFormValue("unitate"))
+	autor, _ := r.Cookie("username")
 	u := dbh.Create_unit(id_unitate)
 
 	add_cap, _ := strconv.ParseBool(r.PostFormValue("add-cap"))
@@ -144,7 +158,7 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 		cap = dbh.Create_chap(idx, str[i:])
 	}
 
-	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb)
+	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb, autor.Value)
 }
 
 func add_ApiHandlers() {
@@ -166,6 +180,10 @@ func add_ApiHandlers() {
 	http.HandleFunc("/login", auth.Login)
 	http.HandleFunc("/logout", auth.Logout)
 	http.HandleFunc("/auth-cont", api.Auth_cont)
+	http.HandleFunc("/unit", exeUnit)
+	http.HandleFunc("/my-less", api.MyAcc)
+	http.HandleFunc("/account", exeAcc)
+
 }
 
 func main() {

@@ -6,6 +6,9 @@ html, body{
   white-space: initial;
   word-wrap: break-word;
   overflow-y: scroll;
+
+  font-family: optimal, sans-serif;
+
 }
 
 .header{
@@ -22,10 +25,28 @@ html, body{
   height: 65px;
 }
 
-.main {
+.menu{
   min-height: 100vh;
+  text-align: center;
 }
 
+.capitol {
+  margin: 5px;
+}
+
+.menu .less {
+  padding: 0px 5px 0px 5px;
+  min-height: 25px;
+}
+
+.menu .less a {
+  color: #fff;
+  text-decoration-line: none;
+}
+
+.main .less:hover {
+  background-color: #394047;
+}
 .slider{
   width: 25px;
   height: 50px;
@@ -34,7 +55,6 @@ html, body{
 
   position: fixed;
   top: 48%;
-  left: 0px;
 }
 
 .arrow-right {
@@ -127,6 +147,7 @@ html, body{
 
 #content {
   max-width: 60vw;
+  margin: 0 0 0 5px;
 }
 
 .header-section:hover{
@@ -209,3 +230,8 @@ img {
 
 #auth:hover .dropdown-content {display: block;}
 
+#id_main {
+  position: absolute;
+  margin-top: 10px;
+  left: 35vw;
+}
