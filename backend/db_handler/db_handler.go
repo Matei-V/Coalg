@@ -47,7 +47,7 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_pag {
 		id_c := strconv.Itoa(c.id_cap)
-		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere, autor) values(?, ?, ?, ?)", p.titlu, id_c, p.descriere, autor)
+		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere, autor, aprobat) values(?, ?, ?, ?, ?)", p.titlu, id_c, p.descriere, autor, "0")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -123,7 +123,7 @@ func Get_Lessons(db *sql.DB, id_cap int) ([]string, []string) {
 	row_num := Last_id(db, "pagina", "id_pag")
 	for i := 0; i < row_num; i++ {
 		var ans string
-		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + ";"
+		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + " and aprobat=1;"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
 		if ans != "" {
@@ -251,4 +251,21 @@ func Get_pag(db *sql.DB, id_pag string) string {
 	row := db.QueryRow(stmt)
 	row.Scan(&ans)
 	return ans
+}
+
+func Aprove(db *sql.DB, id_less string) {
+	update, _ := db.Query("update pagina set aprobat=1 where id_pag=?", id_less)
+	defer update.Close()
+}
+func Reject(db *sql.DB, id_less string) {
+	del1, _ := db.Query("delete from resursa where id_pag=?", id_less)
+	del2, _ := db.Query("delete from problema where id_pag=?", id_less)
+	del3, _ := db.Query("delete from pagina where id_pag=?", id_less)
+	update, _ := db.Query("update pagina set id_pag = id_pag-1 where id_pag > ?;", id_less)
+	alter, _ := db.Query("alter table pagina auto_increment=1;")
+	defer update.Close()
+	defer del1.Close()
+	defer del2.Close()
+	defer del3.Close()
+	defer alter.Close()
 }

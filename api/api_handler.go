@@ -120,7 +120,6 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 	my_url, _ := url.Parse(r.URL.String())
 	param, _ := url.ParseQuery(my_url.RawQuery)
 	id := param.Get("id")
-	fmt.Println(r.URL)
 	if id == "" {
 		htmlStr := "<div id='content' style='position:relative; left:240px'>"
 		htmlStr += "</div>"
@@ -172,24 +171,35 @@ func Auth_cont(w http.ResponseWriter, r *http.Request) {
 
 func MyAcc(w http.ResponseWriter, r *http.Request) {
 	username, _ := r.Cookie("username")
-
-	fmt.Print("A: " + username.Value + "\n")
-	less, id_cap := dbh.Get_Lessons_Auth(db, username.Value)
-
-	for i := 0; i < len(id_cap); i++ {
-		fmt.Print("unit: " + id_cap[i] + "\n")
+	var less, id_unit, id_less, aprobat []string
+	if dbh.IsAdmin(db, username.Value) == false {
+		less, id_unit, id_less, aprobat = dbh.Get_Lessons_Auth(db, username.Value)
+	} else {
+		less, id_unit, id_less, aprobat = dbh.Get_Lessons_Admin(db, username.Value)
 	}
-
 	type Input struct {
-		Less string
-		Cap  string
+		Less    string
+		Cap     string
+		ID_Less string
+		Aprobat string
 	}
 	var In []Input
 	for i := 0; i < len(less); i++ {
-		In = append(In, Input{less[i], "9"})
-		fmt.Print(less[i] + "\n")
+		In = append(In, Input{less[i], id_unit[i], id_less[i], aprobat[i]})
+		fmt.Print(aprobat[i] + "\n")
 	}
 	htmlStr := "static/template/less_list.html"
 	tmpl, _ := template.ParseFiles(htmlStr)
 	tmpl.Execute(w, In)
+}
+
+func Aproba(w http.ResponseWriter, r *http.Request) {
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+	dbh.Aprove(db, param.Get("id"))
+}
+func Respinge(w http.ResponseWriter, r *http.Request) {
+	my_url, _ := url.Parse(r.URL.String())
+	param, _ := url.ParseQuery(my_url.RawQuery)
+	dbh.Reject(db, param.Get("id"))
 }

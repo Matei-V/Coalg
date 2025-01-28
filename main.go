@@ -183,6 +183,8 @@ func add_ApiHandlers() {
 	http.HandleFunc("/unit", exeUnit)
 	http.HandleFunc("/my-less", api.MyAcc)
 	http.HandleFunc("/account", exeAcc)
+	http.HandleFunc("/aproved", api.Aproba)
+	http.HandleFunc("/reject", api.Respinge)
 
 }
 
