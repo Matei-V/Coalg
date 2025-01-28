@@ -235,3 +235,24 @@ img {
   margin-top: 10px;
   left: 35vw;
 }
+
+table, th, td {
+  border: 1px solid #000;
+}
+
+th, td {
+  min-width: 300px;
+  text-align: center;
+}
+ 
+th {
+  background-color: #1f2937;
+}
+
+td {
+  background: #181c25;
+}
+
+table {
+  border-radius: 1rem;
+}

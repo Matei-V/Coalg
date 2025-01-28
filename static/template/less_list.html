@@ -1,14 +1,24 @@
-{{range .}}
-<div id="id_{{.ID_Less}}">
+<table>
+  <tr>
+    <th>Lectie</th>
+    <th>Aprobat</th>
+  </tr>
 
+  {{range .}}
+  <tr id="id_{{.ID_Less}}">
 
-  <a href="/unit?clasa={{.Cap}}&id={{.ID_Less}}">{{.Less}}</a>
-  {{if eq .Aprobat "0"}}<p> NU </p>{{end}}
-  {{if eq .Aprobat "1"}}<p> Yes </p>{{end}}
-  {{if eq .Aprobat "-1"}}<button hx-delete="/aproved?id={{.ID_Less}}" hx-swap='delete'
-    hx-target='#id_{{.ID_Less}}'>Aprobat</button> <button hx-get='/reject?id={{.ID_Less}}' hx-swap='delete'
-    hx-target="#id_{{.ID_Less}}">Respins</button>{{end}}
-  <br>
+    <td>
+      <a href="/unit?clasa={{.Cap}}&id={{.ID_Less}}">{{.Less}}</a>
+    </td>
+    <td>
+      {{if eq .Aprobat "0"}}<p> NU </p>{{end}}
+      {{if eq .Aprobat "1"}}<p> Yes </p>{{end}}
+      {{if eq .Aprobat "-1"}}<button hx-delete="/aproved?id={{.ID_Less}}" hx-swap='delete'
+        hx-target='#id_{{.ID_Less}}'>Aprobat</button> <button hx-get='/reject?id={{.ID_Less}}' hx-swap='delete'
+        hx-target="#id_{{.ID_Less}}">Respins</button>{{end}}
+      <br>
+    </td>
+  </tr>
+  {{end}}
 
-</div>
-{{end}}
+</table>
