@@ -34,7 +34,6 @@ func Add_Session_Token(db *sql.DB, name string, token string) {
 func Get_User(db *sql.DB, name string) (User, bool) {
 	var ans User
 	ans.UserName = name
-	fmt.Print(ans.UserName + "\n")
 	stmt := "select parola from user where name='" + name + "';"
 	row := db.QueryRow(stmt)
 	err := row.Scan(&ans.HashedPassword)
@@ -79,7 +78,6 @@ func Get_Lessons_Auth(db *sql.DB, username string) ([]string, []string, []string
 		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and autor='" + username + "';"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
-		fmt.Print(ans + "\n")
 		stmt = "select aprobat from pagina where id_pag=" + strconv.Itoa(i+1) + " and autor='" + username + "';"
 		row = db.QueryRow(stmt)
 		row.Scan(&aux)
@@ -94,7 +92,6 @@ func Get_Lessons_Auth(db *sql.DB, username string) ([]string, []string, []string
 		stmt := "select id_unit from capitol where id_cap=(select id_cap from pagina where titlu='" + clmn[i] + "')"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
-		fmt.Print("ans: " + ans + "\n")
 		if ans != "" {
 			id_cap = append(id_cap, ans)
 		}
@@ -111,7 +108,6 @@ func Get_Lessons_Admin(db *sql.DB, username string) ([]string, []string, []strin
 		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and aprobat=0;"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
-		fmt.Print(ans + "\n")
 		if ans != "" {
 			clmn = append(clmn, ans)
 			id_less = append(id_less, strconv.Itoa(i+1))
@@ -123,7 +119,8 @@ func Get_Lessons_Admin(db *sql.DB, username string) ([]string, []string, []strin
 		stmt := "select id_unit from capitol where id_cap=(select id_cap from pagina where titlu='" + clmn[i] + "')"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
-		fmt.Print("ans: " + ans + "\n")
+		fmt.Print(stmt + "\n")
+		fmt.Print(ans + "\n")
 		if ans != "" {
 			id_cap = append(id_cap, ans)
 		}

@@ -28,14 +28,14 @@ func Write_menu(w http.ResponseWriter, r *http.Request) {
 	param, _ := url.ParseQuery(my_url.RawQuery)
 
 	unit := param.Get("clasa")
-	caps, _ := dbh.Get_Chapters(db, unit)
+	caps, id_cap := dbh.Get_Chapters(db, unit)
 	var htmlStr string
 	for i := 0; i < len(caps); i++ {
 		if caps[i] == "" {
 			continue
 		}
 		htmlStr += "<h3 class='capitol'>" + caps[i] + "</h3>"
-		less, id := dbh.Get_Lessons(db, i+1)
+		less, id := dbh.Get_Lessons(db, id_cap[i])
 		for j := 0; j < len(less); j++ {
 			param := url.Values{}
 			param.Add("clasa", unit)
@@ -171,7 +171,8 @@ func Auth_cont(w http.ResponseWriter, r *http.Request) {
 
 func MyAcc(w http.ResponseWriter, r *http.Request) {
 	username, _ := r.Cookie("username")
-	var less, id_unit, id_less, aprobat []string
+	var less []string
+	var id_unit, id_less, aprobat []string
 	if dbh.IsAdmin(db, username.Value) == false {
 		less, id_unit, id_less, aprobat = dbh.Get_Lessons_Auth(db, username.Value)
 	} else {
@@ -184,9 +185,12 @@ func MyAcc(w http.ResponseWriter, r *http.Request) {
 		Aprobat string
 	}
 	var In []Input
+	fmt.Print("less:" + strconv.Itoa(len(less)) + "\n")
+	fmt.Print("id_unit:" + strconv.Itoa(len(id_unit)) + "\n")
+	fmt.Print("id_less:" + strconv.Itoa(len(id_less)) + "\n")
+	fmt.Print("aprobat:" + strconv.Itoa(len(aprobat)) + "\n")
 	for i := 0; i < len(less); i++ {
 		In = append(In, Input{less[i], id_unit[i], id_less[i], aprobat[i]})
-		fmt.Print(aprobat[i] + "\n")
 	}
 	htmlStr := "static/template/less_list.html"
 	tmpl, _ := template.ParseFiles(htmlStr)

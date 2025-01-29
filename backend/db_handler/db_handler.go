@@ -55,6 +55,8 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_res {
 		for i := 0; i < len(r); i++ {
+			fmt.Print("pag")
+			fmt.Print(p.id_pag)
 			insert, err := db.Query("insert into resursa(titlu, link, id_pag) values(?, ?, ?)",
 				r[i].titlu, r[i].link, p.id_pag)
 			if err != nil {
@@ -118,12 +120,12 @@ func Get_Chapters(db *sql.DB, unit string) ([]string, []string) {
 	return clmn, id
 }
 
-func Get_Lessons(db *sql.DB, id_cap int) ([]string, []string) {
+func Get_Lessons(db *sql.DB, id_cap string) ([]string, []string) {
 	var clmn, id []string
 	row_num := Last_id(db, "pagina", "id_pag")
 	for i := 0; i < row_num; i++ {
 		var ans string
-		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + strconv.Itoa(id_cap) + " and aprobat=1;"
+		stmt := "select titlu from pagina where id_pag=" + strconv.Itoa(i+1) + " and id_cap=" + id_cap + " and aprobat=1;"
 		row := db.QueryRow(stmt)
 		row.Scan(&ans)
 		if ans != "" {
@@ -254,18 +256,18 @@ func Get_pag(db *sql.DB, id_pag string) string {
 }
 
 func Aprove(db *sql.DB, id_less string) {
-	update, _ := db.Query("update pagina set aprobat=1 where id_pag=?", id_less)
-	defer update.Close()
+	db.Exec("update pagina set aprobat=1 where id_pag=?", id_less)
 }
 func Reject(db *sql.DB, id_less string) {
-	del1, _ := db.Query("delete from resursa where id_pag=?", id_less)
-	del2, _ := db.Query("delete from problema where id_pag=?", id_less)
-	del3, _ := db.Query("delete from pagina where id_pag=?", id_less)
-	update, _ := db.Query("update pagina set id_pag = id_pag-1 where id_pag > ?;", id_less)
-	alter, _ := db.Query("alter table pagina auto_increment=1;")
-	defer update.Close()
-	defer del1.Close()
-	defer del2.Close()
-	defer del3.Close()
-	defer alter.Close()
+	db.Exec("delete from pagina where id_pag=" + id_less + ";")
+
+	db.Exec("update pagina set id_pag = id_pag-1 where id_pag > ?;", id_less)
+
+	inc := Last_id(db, "pagina", "id_pag")
+	db.Exec("alter table pagina auto_increment=" + strconv.Itoa(inc) + ";")
+	inc = Last_id(db, "resursa", "id_res")
+	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
+	inc = Last_id(db, "problema", "id_prob")
+	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
+
 }
