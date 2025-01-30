@@ -3,6 +3,7 @@ package db_handler
 import (
 	"database/sql"
 	"fmt"
+	"mysql_drive/utils"
 	"os"
 	"strconv"
 )
@@ -47,6 +48,7 @@ func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bo
 	}
 	if insert_pag {
 		id_c := strconv.Itoa(c.id_cap)
+		p.descriere = utils.Parse_code(p.descriere)
 		insert, err := db.Query("insert into pagina(titlu, id_cap, descriere, autor, aprobat) values(?, ?, ?, ?, ?)", p.titlu, id_c, p.descriere, autor, "0")
 		if err != nil {
 			panic(err.Error())

@@ -4,15 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"net/url"
-	"os/exec"
 	"strconv"
 
 	api "mysql_drive/api"
 	"mysql_drive/backend/auth"
 	dbh "mysql_drive/backend/db_handler"
+	"mysql_drive/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -165,14 +164,9 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func ParseCode(w http.ResponseWriter, r *http.Request) {
-	//htmlStr := "<code id=\"cpp\">#include<iostream>\nint n;\nstd::cin >> n;</code>"
-	cmd := exec.Command("/bin/sh", "/home/matei/coalg/utils/hilite.me/run_python.bash")
-
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
-	}
-	fmt.Printf("combined out:\n%s\n", string(out))
+	htmlStr := "aoeuuu <code id='cpp'> #include<iostream>\nint n;\nstd::cin >> n; </code> aoeuidd \n <code id='cpp'> #include<iostream>\nint n;\nstd::cout << n; </code>"
+	htmlStr = "<html>" + utils.Parse_code(htmlStr) + "</html>"
+	fmt.Fprintln(w, htmlStr)
 }
 
 func add_ApiHandlers() {
