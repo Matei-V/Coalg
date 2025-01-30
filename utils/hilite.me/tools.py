@@ -21,16 +21,19 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 
-def hilite_me(code, lexer, options, style, linenos, divstyles):
-    lexer = lexer or 'python'
-    style = style or 'colorful'
+def hilite_me(code):
+    lexer = 'cpp'
+    style = 'github-dark'
     defstyles = 'overflow:auto;width:auto;'
+    options = ""
+    linenos=False
+    options = dict(convert(option.split('=')) for option in options.split(',') if option)
 
     formatter = HtmlFormatter(style=style,
                               linenos=False,
                               noclasses=True,
                               cssclass='',
-                              cssstyles=defstyles + divstyles,
+                              cssstyles=defstyles,
                               prestyles='margin: 0')
     html = highlight(code, get_lexer_by_name(lexer, **options), formatter)
     if linenos:

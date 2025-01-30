@@ -44,7 +44,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_, ok := dbh.Get_User(db, username)
-	if ok != true {
+	if ok != false {
+		fmt.Println("register get")
 		In := "Nume de utilizator deja existent"
 		var filename = "static/pages/login.html"
 		t, err := template.ParseFiles(filename)
@@ -57,7 +58,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 	dbh.Add_User(db, username, hashedPassword, "")
 
-	http.Redirect(w, r, "/", 301)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

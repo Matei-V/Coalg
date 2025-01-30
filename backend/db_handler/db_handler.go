@@ -92,16 +92,16 @@ func Last_id(db *sql.DB, table string, id_type string) int {
 
 func Connect_db() *sql.DB {
 	pass := os.Getenv("MYSQL_PASS")
-	db, err := sql.Open("mysql", "root:"+pass+"@tcp(localhost:3306)/coalg_db")
+	db, err := sql.Open("mysql", "root:"+pass+"@tcp(localhost:3306)/coalgdb")
 	if err != nil {
 		fmt.Println("error")
 	}
 
 	err = db.Ping()
-
 	if err != nil {
 		panic(err.Error())
 	}
+
 	return db
 }
 
