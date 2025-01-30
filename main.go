@@ -2,9 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"net/url"
+	"os/exec"
 	"strconv"
 
 	api "mysql_drive/api"
@@ -161,6 +164,17 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb, autor.Value)
 }
 
+func ParseCode(w http.ResponseWriter, r *http.Request) {
+	//htmlStr := "<code id=\"cpp\">#include<iostream>\nint n;\nstd::cin >> n;</code>"
+	cmd := exec.Command("/bin/sh", "/home/matei/coalg/utils/hilite.me/run_python.bash")
+
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	fmt.Printf("combined out:\n%s\n", string(out))
+}
+
 func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
 	http.HandleFunc("/get-menu", api.Write_menu)
@@ -185,6 +199,7 @@ func add_ApiHandlers() {
 	http.HandleFunc("/account", exeAcc)
 	http.HandleFunc("/aproved", api.Aproba)
 	http.HandleFunc("/reject", api.Respinge)
+	http.HandleFunc("/code", ParseCode)
 
 }
 
