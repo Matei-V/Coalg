@@ -26,6 +26,8 @@ func Parse_code(htmlStr string) string {
 		code := auxStr[(code_start + 1):]
 
 		code = strings.Replace(code, "\n", "\\n", 1000)
+		code = strings.Replace(code, "\"", "\\\"", 1000)
+		fmt.Println(code)
 		r := highlight("cpp", code)
 		fmt.Println(r)
 		htmlStr = strings.Replace(htmlStr, htmlStr[start:fin], r, 100)
