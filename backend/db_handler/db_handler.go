@@ -8,6 +8,21 @@ import (
 	"strconv"
 )
 
+func Connect_db() *sql.DB {
+	pass := os.Getenv("MYSQL_PASS")
+	db, err := sql.Open("mysql", "root:"+pass+"@tcp(localhost:3306)/coalgdb")
+	if err != nil {
+		fmt.Println("error")
+	}
+
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return db
+}
+
 type unit struct {
 	id_unit int
 }
@@ -36,6 +51,56 @@ type prob struct {
 	titlu string
 	link  string
 	limba string
+}
+
+func Create_chap(id_cap int, titlu string) chap {
+	var ans chap
+	ans.id_cap = id_cap
+	ans.titlu = titlu
+	return ans
+}
+
+func Create_unit(id_unit int) unit {
+	var ans unit
+	ans.id_unit = id_unit
+	return ans
+}
+func Create_pag(id_pag int, titlu string, descriere string) pag {
+	var ans pag
+	ans.id_pag = id_pag
+	ans.titlu = titlu
+	ans.descriere = descriere
+	return ans
+}
+
+func Create_res(id_res []int, titlu []string, link []string) []res {
+	var ans []res
+
+	for i := 0; i < len(id_res); i++ {
+		var aux res
+		aux.id_res = id_res[i]
+		aux.titlu = titlu[i]
+		aux.link = link[i]
+
+		ans = append(ans, aux)
+	}
+
+	return ans
+}
+
+func Create_pb(id_pb []int, titlu []string, link []string) []prob {
+	var ans []prob
+
+	for i := 0; i < len(id_pb); i++ {
+		var aux prob
+		aux.id_pb = id_pb[i]
+		aux.titlu = titlu[i]
+		aux.link = link[i]
+
+		ans = append(ans, aux)
+	}
+
+	return ans
 }
 
 func Add_page(db *sql.DB, u unit, c chap, insert_chap bool, p pag, insert_pag bool, r []res, insert_res bool, pb []prob, insert_pb bool, autor string) {
@@ -88,21 +153,6 @@ func Last_id(db *sql.DB, table string, id_type string) int {
 		panic(err.Error())
 	}
 	return ans
-}
-
-func Connect_db() *sql.DB {
-	pass := os.Getenv("MYSQL_PASS")
-	db, err := sql.Open("mysql", "root:"+pass+"@tcp(localhost:3306)/coalgdb")
-	if err != nil {
-		fmt.Println("error")
-	}
-
-	err = db.Ping()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return db
 }
 
 func Get_Chapters(db *sql.DB, unit string) ([]string, []string) {
@@ -198,78 +248,11 @@ func Get_title(db *sql.DB, id_pag string) string {
 	return aux
 }
 
-func Create_chap(id_cap int, titlu string) chap {
-	var ans chap
-	ans.id_cap = id_cap
-	ans.titlu = titlu
-	return ans
-}
-
-func Create_unit(id_unit int) unit {
-	var ans unit
-	ans.id_unit = id_unit
-	return ans
-}
-func Create_pag(id_pag int, titlu string, descriere string) pag {
-	var ans pag
-	ans.id_pag = id_pag
-	ans.titlu = titlu
-	ans.descriere = descriere
-	return ans
-}
-
-func Create_res(id_res []int, titlu []string, link []string) []res {
-	var ans []res
-
-	for i := 0; i < len(id_res); i++ {
-		var aux res
-		aux.id_res = id_res[i]
-		aux.titlu = titlu[i]
-		aux.link = link[i]
-
-		ans = append(ans, aux)
-	}
-
-	return ans
-}
-
-func Create_pb(id_pb []int, titlu []string, link []string) []prob {
-	var ans []prob
-
-	for i := 0; i < len(id_pb); i++ {
-		var aux prob
-		aux.id_pb = id_pb[i]
-		aux.titlu = titlu[i]
-		aux.link = link[i]
-
-		ans = append(ans, aux)
-	}
-
-	return ans
-}
-
-func Get_pag(db *sql.DB, id_pag string) string {
+func Get_desc(db *sql.DB, id_pag string) string {
 	var ans string
 
 	stmt := "select descriere from pagina where id_pag='" + id_pag + "';"
 	row := db.QueryRow(stmt)
 	row.Scan(&ans)
 	return ans
-}
-
-func Aprove(db *sql.DB, id_less string) {
-	db.Exec("update pagina set aprobat=1 where id_pag=?", id_less)
-}
-func Reject(db *sql.DB, id_less string) {
-	db.Exec("delete from pagina where id_pag=" + id_less + ";")
-
-	db.Exec("update pagina set id_pag = id_pag-1 where id_pag > ?;", id_less)
-
-	inc := Last_id(db, "pagina", "id_pag")
-	db.Exec("alter table pagina auto_increment=" + strconv.Itoa(inc) + ";")
-	inc = Last_id(db, "resursa", "id_res")
-	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
-	inc = Last_id(db, "problema", "id_prob")
-	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
-
 }

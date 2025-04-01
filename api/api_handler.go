@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"mysql_drive/backend/auth"
+	"mysql_drive/api/auth"
 	dbh "mysql_drive/backend/db_handler"
 )
 
@@ -129,7 +129,7 @@ func Load_lesson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	desc := dbh.Get_pag(db, id)
+	desc := dbh.Get_desc(db, id)
 	title := dbh.Get_title(db, id)
 	titlu_res, link_res := dbh.Get_res(db, id)
 	htmlStr := "<div id='content' style='position:relative; left:240px'>"

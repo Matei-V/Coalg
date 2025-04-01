@@ -16,12 +16,6 @@ func Parse_code(htmlStr string) string {
 
 		fin += strings.Index(htmlStr[fin:], ">") + 1
 
-		/*
-			lang_start := strings.Index(auxStr, "'")
-			lang_fin := strings.Index(auxStr[(start+2):], "'")
-			lang_fin = lang_start + lang_fin
-			lang := auxStr[(lang_start + 1):(lang_fin + 1)]
-		*/
 		code_start := strings.Index(auxStr, ">")
 		code := auxStr[(code_start + 1):]
 

@@ -52,14 +52,6 @@ func Get_User(db *sql.DB, name string) (User, bool) {
 	return ans, true
 }
 
-func Add_CSRF_Token(db *sql.DB, name string, token string) {
-	stmt := "update user set csrftoken=? where name=?;"
-	alter, err := db.Query(stmt, token, name)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer alter.Close()
-}
 func Get_User_Password(db *sql.DB, name string) string {
 	var ans string
 	stmt := "select parola from user where name='admin';"
@@ -70,6 +62,7 @@ func Get_User_Password(db *sql.DB, name string) string {
 	}
 	return ans
 }
+
 func Get_Lessons_Auth(db *sql.DB, username string) ([]string, []string, []string, []string) {
 	var clmn, id_cap, id_less, aprobat []string
 	row_num := Last_id(db, "pagina", "id_pag")
@@ -136,4 +129,21 @@ func IsAdmin(db *sql.DB, username string) bool {
 	row.Scan(&ans)
 
 	return ans == "1"
+}
+
+func Aprove(db *sql.DB, id_less string) {
+	db.Exec("update pagina set aprobat=1 where id_pag=?", id_less)
+}
+func Reject(db *sql.DB, id_less string) {
+	db.Exec("delete from pagina where id_pag=" + id_less + ";")
+
+	db.Exec("update pagina set id_pag = id_pag-1 where id_pag > ?;", id_less)
+
+	inc := Last_id(db, "pagina", "id_pag")
+	db.Exec("alter table pagina auto_increment=" + strconv.Itoa(inc) + ";")
+	inc = Last_id(db, "resursa", "id_res")
+	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
+	inc = Last_id(db, "problema", "id_prob")
+	db.Exec("alter table resursa auto_increment=" + strconv.Itoa(inc) + ";")
+
 }

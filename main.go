@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	api "mysql_drive/api"
-	"mysql_drive/backend/auth"
+	"mysql_drive/api/auth"
 	dbh "mysql_drive/backend/db_handler"
 	"mysql_drive/utils"
 
@@ -202,5 +202,5 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	http.HandleFunc("/", exeIndex)
-	http.ListenAndServe(":8090", nil)
+	http.ListenAndServe(":8080", nil)
 }
