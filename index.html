@@ -8,31 +8,6 @@
 
   <link href="static/css/style.css" rel="stylesheet">
 
-  <script>
-    var menu_tog = false;
-
-    function show_menu() {
-      var menu_width = document.getElementById("menu").offsetWidth;
-      console.log(menu_width);
-      if (menu_tog === false) {
-        document.getElementById("menu").style.left = "0px";
-        document.getElementById("slider").style.left = menu_width.toString() + "px";
-        document.getElementById("content").style.left = (menu_width + 30).toString() + "px";
-      } else {
-        document.getElementById("menu").style.left = "-" + menu_width.toString() + "px";
-        document.getElementById("slider").style.left = "0px";
-        document.getElementById("content").style.left = "30px";
-      }
-      menu_tog = !menu_tog;
-    }
-
-    function slider_pos() {
-      var menu_width = document.getElementById("menu").offsetWidth;
-      document.getElementById("slider").style.left = "220px";
-      console.log(menu_width);
-    }
-  </script>
-
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
@@ -60,7 +35,7 @@
           <img src="static/images/acc-logo.png" alt="nu e taticule">
         </a>
         <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
-          <a href="/login-page">Login</a>
+          <a href="/login-page">Login</a><br>
           <a href="/register-page">Register</a>
         </div>
       </div>
@@ -76,7 +51,21 @@
   </div>
 
   <div class="footer">
-
+    <div class="links">
+      <h4>Link-uri utile</h4>
+      <a href="/">Home</a><br>
+      <a href="/unit?clasa=9">Clasa a 9-a</a><br>
+      <a href="/unit?clasa=10">Clasa a 10-a</a><br>
+      <a href="/unit?clasa=11">Clasa a 11-a</a><br>
+      <a href="/add-page">Adaugă o pagină</a><br>
+      <a href="/login-page">Login</a><br>
+      <a href="/register-page">Register</a><br>
+    </div>
+    <div class="credit">
+      <h4>Credite</h4>
+      <p>Proiect realizat de Vatamanu Matei</p>
+      <p><a href="http://hilite.me">hilite.me</a> pentru evidențierea secvențelor de cod.</p>
+    </div>
   </div>
 
 </body>

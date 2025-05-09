@@ -88,6 +88,7 @@ html, body{
 
 .menu{
   position: absolute;
+  height: 70%;
   top: 65px;
   left: 0px;
   border: 1px solid #fff;
@@ -150,6 +151,10 @@ html, body{
   margin: 0 0 0 5px;
 }
 
+.main {
+  min-height: 121vh;
+}
+
 .header-section:hover{
   background: #4606c6;
 }
@@ -191,7 +196,29 @@ html, body{
   height: 3px;
 }
 
+.footer {
+  display: inline-block;
+  min-height: 100px;
+  width: 100%;
+  background-color: #171a1c;
+}
 
+.footer .links {
+  max-width: 30%;
+  position: relative;
+  float: left;
+  margin: 10px;
+}
+
+.footer a {
+ color: #fff;
+}
+
+.footer .credit{
+  max-width: 30%;
+  position: relative;
+  float:right;
+}
 img {
   height: 25px;
   width: 25px;
@@ -207,14 +234,16 @@ img {
 
 .dropdown-content {
   display: none;
-  position: absolute;
+  position: fixed;
+  right: 0;
   min-width: 100px;
   z-index: 7;
 }
 
+
+
 .dropdown-content a {
   display: inline-block;
-  right: 10vw;
   background-color:#394047;
   top: 33px;
   font-size: 15px;
