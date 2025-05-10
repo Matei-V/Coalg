@@ -36,7 +36,7 @@
           <img src="static/images/acc-logo.png" alt="nu e taticule">
         </a>
         <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
-          <a href="/login-page">Login</a>
+          <a href="/login-page">Login</a><br>
           <a href="/register-page">Register</a>
         </div>
       </div>
@@ -48,7 +48,7 @@
     <br>
     <form hx-post='/register' hx-swap='none' style='position:relative; left:300px'>
       <input class='text-input' type="text" name="username" placeholder='Username'><br>
-      <input class='text-input' type="text" name="password" placeholder='Password'><br>
+      <input class='text-input' type="password" name="password" placeholder='Password'><br>
       <input class='button' type="submit" value="Submit">
     </form>
 

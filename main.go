@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -11,7 +10,6 @@ import (
 	api "mysql_drive/api"
 	"mysql_drive/api/auth"
 	dbh "mysql_drive/backend/db_handler"
-	"mysql_drive/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -163,12 +161,6 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb, autor.Value)
 }
 
-func ParseCode(w http.ResponseWriter, r *http.Request) {
-	htmlStr := "aoeuuu <code id='cpp'> #include<iostream>\nint n;\nstd::cin >> n; </code> aoeuidd \n <code id='cpp'> #include<iostream>\nint n;\nstd::cout << n; </code>"
-	htmlStr = "<html>" + utils.Parse_code(htmlStr) + "</html>"
-	fmt.Fprintln(w, htmlStr)
-}
-
 func add_ApiHandlers() {
 	http.HandleFunc("/load-menu", api.Load_menu)
 	http.HandleFunc("/get-menu", api.Write_menu)
@@ -193,8 +185,6 @@ func add_ApiHandlers() {
 	http.HandleFunc("/account", exeAcc)
 	http.HandleFunc("/aproved", api.Aproba)
 	http.HandleFunc("/reject", api.Respinge)
-	http.HandleFunc("/code", ParseCode)
-
 }
 
 func main() {
