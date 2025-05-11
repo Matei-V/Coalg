@@ -31,7 +31,7 @@ func Parse_code(htmlStr string) string {
 }
 
 func highlight(lang, code string) string {
-	cmd := exec.Command("/bin/sh", "/home/matei/coalg/utils/hilite.me/run_python.bash", code)
+	cmd := exec.Command("/bin/sh", "/home/ubuntu/Coalg/utils/hilite.me/run_python.bash", code)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)

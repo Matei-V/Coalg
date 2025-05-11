@@ -4,13 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"mysql_drive/utils"
-	"os"
 	"strconv"
 )
 
 func Connect_db() *sql.DB {
-	pass := os.Getenv("MYSQL_PASS")
-	db, err := sql.Open("mysql", "root:"+pass+"@tcp(localhost:3306)/coalgdb")
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/coalgdb")
 	if err != nil {
 		fmt.Println("error")
 	}

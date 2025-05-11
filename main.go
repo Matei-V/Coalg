@@ -192,5 +192,5 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	http.HandleFunc("/", exeIndex)
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":80", nil)
 }
