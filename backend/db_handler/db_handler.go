@@ -4,11 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"mysql_drive/utils"
+	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 func Connect_db() *sql.DB {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/coalgdb")
+	if err := godotenv.Load(".env"); err != nil {
+		fmt.Println("error")
+	}
+	db, err := sql.Open("mysql", "root:"+os.Getenv("PASSWORD")+"@tcp(localhost:3306)/coalgdb")
 	if err != nil {
 		fmt.Println("error")
 	}

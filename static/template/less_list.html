@@ -1,24 +1,76 @@
-<table>
-  <tr>
-    <th>Lectie</th>
-    <th>Aprobat</th>
-  </tr>
-
-  {{range .}}
-  <tr id="id_{{.ID_Less}}">
-
-    <td>
-      <a href="/unit?clasa={{.Cap}}&id={{.ID_Less}}">{{.Less}}</a>
-    </td>
-    <td>
-      {{if eq .Aprobat "0"}}<p> NU </p>{{end}}
-      {{if eq .Aprobat "1"}}<p> Yes </p>{{end}}
-      {{if eq .Aprobat "-1"}}<button hx-delete="/aproved?id={{.ID_Less}}" hx-swap='delete'
-        hx-target='#id_{{.ID_Less}}'>Aprobat</button> <button hx-get='/reject?id={{.ID_Less}}' hx-swap='delete'
-        hx-target="#id_{{.ID_Less}}">Respins</button>{{end}}
-      <br>
-    </td>
-  </tr>
-  {{end}}
-
-</table>
+<div class="table-responsive">
+  <table class="custom-table">
+    <thead>
+      <tr>
+        <th>Titlu Lecție</th>
+        <th>Clasă</th>
+        <th>Stare Aprobare</th>
+        <th style="text-align: right !important;">Acțiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .}}
+      <tr id="id_{{.ID_Less}}">
+        <td>
+          <a href="/unit?clasa={{.Cap}}&id={{.ID_Less}}" class="table-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--brand-accent);">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            {{.Less}}
+          </a>
+        </td>
+        <td>
+          <span class="badge badge-grade-sm">Clasa a {{.Cap}}-a</span>
+        </td>
+        <td>
+          {{if eq .Aprobat "0"}}
+            <span class="status-badge status-pending">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              În așteptare
+            </span>
+          {{end}}
+          {{if eq .Aprobat "1"}}
+            <span class="status-badge status-approved">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Publicată
+            </span>
+          {{end}}
+          {{if eq .Aprobat "-1"}}
+            <span class="status-badge status-review">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Necesită Aprobare
+            </span>
+          {{end}}
+        </td>
+        <td style="text-align: right !important;">
+          {{if eq .Aprobat "-1"}}
+            <div class="action-btn-group" style="justify-content: flex-end;">
+              <button class="btn btn-xs btn-approve" hx-delete="/aproved?id={{.ID_Less}}" hx-swap='delete' hx-target='#id_{{.ID_Less}}' title="Aprobă lecția">
+                ✓ Aprobă
+              </button>
+              <button class="btn btn-xs btn-reject" hx-get='/reject?id={{.ID_Less}}' hx-swap='delete' hx-target="#id_{{.ID_Less}}" title="Respinge propunerea">
+                ✕ Respinge
+              </button>
+            </div>
+          {{else}}
+            <a href="/unit?clasa={{.Cap}}&id={{.ID_Less}}" class="btn btn-xs btn-secondary" style="display: inline-flex;">
+              Deschide
+            </a>
+          {{end}}
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="4" style="text-align: center !important; padding: 3rem 1rem; color: var(--text-muted);">
+          Nu ai propus nicio lecție încă.<br>
+          <a href="/add-page" class="btn btn-sm btn-primary-gradient" style="margin-top: 1rem; display: inline-flex;">+ Propune prima ta lecție</a>
+        </td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>

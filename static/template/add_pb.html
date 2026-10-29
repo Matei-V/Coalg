@@ -1,13 +1,17 @@
-<div class='pb-input_{{.}}'>
-  <input class='text-input' type='text' placeholder='Nume Problema' name='pb_{{.}}'>
-  <input class='text-input' type='text' placeholder='Link Problema' name='link_pb_{{.}}'>
-  <span class='crosssign' hx-get='/delete-pb' hx-target='.pb-input_{{.}}' hx-swap='delete'
-    hx-trigger='click'>
-    <div class='crosssign_circle'></div>
-    <div class='crosssign_stem'></div>
-    <div class='crosssign_stem2'></div>
-  </span><br>
-
+<div class='dynamic-row pb-input_{{.}}'>
+  <div class='form-group flex-1'>
+    <label class='form-label-sub'>Nume problemă #{{.}}</label>
+    <input class='form-control text-input' type='text' placeholder='Ex: QuickSort #1024 Pbinfo' name='pb_{{.}}' required>
+  </div>
+  <div class='form-group flex-2'>
+    <label class='form-label-sub'>Link problemă</label>
+    <input class='form-control text-input' type='url' placeholder='https://www.pbinfo.ro/probleme/...' name='link_pb_{{.}}' required>
+  </div>
+  <button type='button' class='btn-remove-row' onclick="this.closest('.dynamic-row').remove()" title="Șterge problema">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
 </div>
-<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb'
-  value='{{.}}'>
+<input class='nr_pb' type='hidden' hx-post='/update_nr_pb' hx-trigger='load' hx-swap='outerHTML' name='nr_pb' value='{{.}}'>

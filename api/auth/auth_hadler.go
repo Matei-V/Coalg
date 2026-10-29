@@ -22,8 +22,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, _ := hashPassword(password)
 
 	if len(username) < 4 {
-		In := "Nume de utilizator prea scurt"
-		var filename = "static/pages/login.html"
+		In := "Numele de utilizator trebuie să conțină cel puțin 4 caractere."
+		var filename = "static/pages/register.html"
 		t, err := template.ParseFiles(filename)
 		if err != nil {
 			panic(err.Error())
@@ -33,8 +33,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(password) < 8 {
-		In := "Parola prea scurta"
-		var filename = "static/pages/login.html"
+		In := "Parola trebuie să conțină cel puțin 8 caractere."
+		var filename = "static/pages/register.html"
 		t, err := template.ParseFiles(filename)
 		if err != nil {
 			panic(err.Error())
@@ -46,8 +46,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	_, ok := dbh.Get_User(db, username)
 	if ok != false {
 		fmt.Println("register get")
-		In := "Nume de utilizator deja existent"
-		var filename = "static/pages/login.html"
+		In := "Numele de utilizator este deja utilizat. Alege alt nume."
+		var filename = "static/pages/register.html"
 		t, err := template.ParseFiles(filename)
 		if err != nil {
 			panic(err.Error())
@@ -57,7 +57,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	dbh.Add_User(db, username, hashedPassword, "")
-
+	http.Redirect(w, r, "/login-page?registered=true", http.StatusSeeOther)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +66,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Print(username + password + "\n")
 	user, ok := dbh.Get_User(db, username)
 	if !ok || !checkPasswordHash(password, user.HashedPassword) {
-		In := "Nume sau parola gresite;"
+		In := "Nume de utilizator sau parolă incorecte."
 		var filename = "static/pages/login.html"
 		t, err := template.ParseFiles(filename)
 		if err != nil {
@@ -81,6 +81,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_token",
 		Value:    sessionToken,
+		Path:     "/",
 		Expires:  time.Now().Add(24 * time.Hour),
 		HttpOnly: true,
 	})
@@ -88,6 +89,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "username",
 		Value:    username,
+		Path:     "/",
 		Expires:  time.Now().Add(24 * time.Hour),
 		HttpOnly: true,
 	})
@@ -96,16 +98,25 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	username, _ := r.Cookie("username")
+	if username, err := r.Cookie("username"); err == nil && username != nil {
+		dbh.Add_Session_Token(db, username.Value, "")
+	}
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_token",
 		Value:    "",
+		Path:     "/",
 		Expires:  time.Now().Add(-time.Hour),
 		HttpOnly: true,
 	})
 
-	dbh.Add_Session_Token(db, username.Value, "")
+	http.SetCookie(w, &http.Cookie{
+		Name:     "username",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Now().Add(-time.Hour),
+		HttpOnly: true,
+	})
 	http.Redirect(w, r, "/", 302)
 }
 

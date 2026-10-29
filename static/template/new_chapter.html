@@ -1,11 +1,21 @@
-<select class='text-input' name="unitate">
-  <option value="9">Clasa a 9-a</option>
-  <option value="10">Clasa a 10-a</option>
-  <option value="11">Clasa a 11-a</option>
-  <option value="12">Clasa a 12-a</option>
-</select>
-<br>
-<input class='text-input' type='text' name='capitol' placeholder='Capitol'>
-<button class='button' hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add to exsisting
-  Chapter</button>
-<input type='hidden' name='add-cap' value='true'>
+<div class="new-chapter-wrapper">
+  <div class="form-row">
+    <div class="form-group flex-1">
+      <label class="form-label-sub">Selectează Clasa</label>
+      <select class='form-control text-input' name="unitate">
+        <option value="9">Clasa a IX-a</option>
+        <option value="10" selected>Clasa a X-a</option>
+        <option value="11">Clasa a XI-a</option>
+        <option value="12">Clasa a XII-a</option>
+      </select>
+    </div>
+    <div class="form-group flex-2">
+      <label class="form-label-sub">Titlu Capitol Nou</label>
+      <input class='form-control text-input' type='text' name='capitol' placeholder='Ex: Tehnica Divide et Impera' required>
+    </div>
+  </div>
+  <button class='btn btn-xs btn-outline-secondary' type="button" hx-post='/add_to_existing_chapter' hx-target='.Chapter' hx-swap='innerHTML'>
+    ← Sau alege din capitolele existente
+  </button>
+  <input type='hidden' name='add-cap' value='true'>
+</div>

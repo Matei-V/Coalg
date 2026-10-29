@@ -1,4 +1,4 @@
 #!/bin/sh
-
-cd /home/ubuntu/Coalg/utils/hilite.me
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 python3 -c "from tools import *; print(hilite_me(\"$1\"))"

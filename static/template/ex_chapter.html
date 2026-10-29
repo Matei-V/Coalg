@@ -1,3 +1,10 @@
-<div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
-<button class='button' hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>Add new Chapter</button>
-<input type='hidden' name='add-cap' value='false'>
+<div class="existing-chapter-wrapper">
+  <div class="form-group">
+    <label class="form-label-sub">Alege capitolul</label>
+    <div hx-post='/load-chapters' hx-swap='outerHTML' hx-trigger='load'></div>
+  </div>
+  <button class='btn btn-xs btn-outline-secondary' type="button" hx-post='/add_new_chapter' hx-target='.Chapter' hx-swap='innerHTML'>
+    + Creează un capitol nou
+  </button>
+  <input type='hidden' name='add-cap' value='false'>
+</div>

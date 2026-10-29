@@ -94,6 +94,15 @@ func exeLogin(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 func exeAcc(w http.ResponseWriter, r *http.Request) {
+	if err := auth.Authorize(r); err != nil {
+		var filename = "static/pages/unauthorized.html"
+		t, err := template.ParseFiles(filename)
+		if err != nil {
+			panic(err.Error())
+		}
+		t.Execute(w, nil)
+		return
+	}
 	var filename = "static/pages/account.html"
 	t, err := template.ParseFiles(filename)
 	if err != nil {
@@ -104,7 +113,6 @@ func exeAcc(w http.ResponseWriter, r *http.Request) {
 }
 func addPage(w http.ResponseWriter, r *http.Request) {
 	id_unitate, _ := strconv.Atoi(r.PostFormValue("unitate"))
-	autor, _ := r.Cookie("username")
 	u := dbh.Create_unit(id_unitate)
 
 	add_cap, _ := strconv.ParseBool(r.PostFormValue("add-cap"))
@@ -158,7 +166,22 @@ func addPage(w http.ResponseWriter, r *http.Request) {
 		cap = dbh.Create_chap(idx, str[i:])
 	}
 
-	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb, autor.Value)
+	autorVal := "anonim"
+	if autor, err := r.Cookie("username"); err == nil && autor != nil {
+		autorVal = autor.Value
+	}
+	dbh.Add_page(db, u, cap, add_cap, pag, true, res, add_res, pb, add_pb, autorVal)
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(`<div class="form-success-card">
+		<div class="success-icon">✓</div>
+		<h3>Lecția a fost trimisă cu succes!</h3>
+		<p>Materialul tău educațional a fost înregistrat și va apărea pe platformă după validarea de către un administrator.</p>
+		<div class="success-actions">
+			<a href="/account" class="btn btn-primary-gradient">Vezi în Contul Meu</a>
+			<a href="/unit?clasa=` + strconv.Itoa(id_unitate) + `" class="btn btn-secondary-glass">Mergi la lecțiile clasei</a>
+		</div>
+	</div>`))
 }
 
 func add_ApiHandlers() {
@@ -192,5 +215,6 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	http.HandleFunc("/", exeIndex)
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
+	print("Opened Server")
 }

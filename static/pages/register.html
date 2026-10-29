@@ -1,79 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>cO(alg)</title>
+  <title>cO(alg) — Înregistrare cont</title>
+  <meta name="description" content="Creează un cont pe cO(alg) pentru a contribui cu materiale de informatică.">
 
   <link href="static/css/style.css" rel="stylesheet">
-
-
+  <script src='static/scripts/script.js'></script>
   <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
 <body>
-  <div class="header">
-    <div class='align-left'>
-      <div class='header-section'><a href="/">cOalg</a></div>
-      <div class='header-section'><a href="/unit?clasa=9"> Clasa a 9-a</a></div>
-      <div class='header-section'><a href="/unit?clasa=10"> Clasa a 10-a</a></div>
-      <div class='header-section'><a href="/unit?clasa=11"> Clasa a 11-a</a></div>
+  <header class="header">
+    <div class="align-left">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </div>
+        <span>cO<span class="logo-accent">(alg)</span></span>
+      </a>
+
+      <nav class="header-section"><a href="/">Acasă</a></nav>
+      <nav class="header-section"><a href="/unit?clasa=9">Clasa a IX-a</a></nav>
+      <nav class="header-section"><a href="/unit?clasa=10">Clasa a X-a</a></nav>
+      <nav class="header-section"><a href="/unit?clasa=11">Clasa a XI-a</a></nav>
+      <nav class="header-section"><a href="/unit?clasa=12">Clasa a XII-a</a></nav>
     </div>
-    <div class='align-right'>
-      <div class='header-section' id='add_page'>
-        <a href="/add-page">
-          <img src="static/images/add_page.png" alt="nu e taticule">
+
+    <div class="align-right">
+      <div class="header-section" id="github">
+        <a href="https://github.com/Matei-V/Coalg" target="_blank" rel="noopener noreferrer" class="icon-button" title="Vezi codul pe GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
         </a>
       </div>
-      <div class='header-section' id='github'>
-        <a href="https://github.com/Matei-V/Coalg">
-          <img src="static/images/github-logo.png" alt="nu e taticule">
-        </a>
-      </div>
-      <div class='header-section' id='auth'>
-        <a id='authbtn' href="/login-page">
-          <img src="static/images/acc-logo.png" alt="nu e taticule">
-        </a>
-        <div class="dropdown-content" hx-get='/auth-cont' hx-swap='outerHTML' hx-trigger='load'>
-          <a href="/login-page">Login</a><br>
-          <a href="/register-page">Register</a>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+    <div class="separator"></div>
+
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-header-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </div>
+          <h2>Creează un cont nou</h2>
+          <p>Alătură-te comunității și contribuie cu propriile tale lecții</p>
+        </div>
+
+        {{if .}}
+        <div class="auth-alert-error">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span>{{.}}</span>
+        </div>
+        {{end}}
+
+        <form action='/register' method="POST">
+          <div class="form-group">
+            <label class="form-label" for="username">Nume de utilizator</label>
+            <input class='form-control text-input' id="username" type="text" name="username" placeholder='Minim 4 caractere' required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Parolă</label>
+            <input class='form-control text-input' id="password" type="password" name="password" placeholder='Minim 8 caractere' required>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <input class='btn btn-primary-gradient' style="width: 100%;" type="submit" value="Creează contul">
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          Ai deja un cont? <a href="/login-page">Autentifică-te aici</a>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <div class="main" id="main" style="position:relative;left:-100px">
-    <div class="separator"></div>
-    <br>
-    <form hx-post='/register' hx-swap='none' style='position:relative; left:300px'>
-      <input class='text-input' type="text" name="username" placeholder='Username'><br>
-      <input class='text-input' type="password" name="password" placeholder='Password'><br>
-      <input class='button' type="submit" value="Submit">
-    </form>
-
-  </div>
-
-  <div class="footer">
-    <div class="links">
-      <h4>Link-uri utile</h4>
-      <a href="/">Home</a><br>
-      <a href="/unit?clasa=9">Clasa a 9-a</a><br>
-      <a href="/unit?clasa=10">Clasa a 10-a</a><br>
-      <a href="/unit?clasa=11">Clasa a 11-a</a><br>
-      <a href="/add-page">Adaugă o pagină</a><br>
-      <a href="/login-page">Login</a><br>
-      <a href="/register-page">Register</a><br>
+  <footer class="footer">
+    <div class="footer-bottom" style="border: none; padding: 0; justify-content: center;">
+      <div>&copy; 2026 cO(alg). Proiect realizat de Vatamanu Matei.</div>
     </div>
-    <div class="credit">
-      <h4>Credite</h4>
-      <p>Proiect realizat de Vatamanu Matei</p>
-      <p><a href="hilite.me">hilite.me</a> pentru evidențierea secvențelor de cod.</p>
-    </div>
-  </div>
-
-
-
+  </footer>
 </body>
 
 </html>

@@ -3,7 +3,9 @@ package utils
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -31,10 +33,16 @@ func Parse_code(htmlStr string) string {
 }
 
 func highlight(lang, code string) string {
-	cmd := exec.Command("/bin/sh", "/home/ubuntu/Coalg/utils/hilite.me/run_python.bash", code)
+	scriptPath := filepath.Join("utils", "hilite.me", "run_python.bash")
+	if _, err := os.Stat(scriptPath); os.IsNotExist(err) {
+		// Fallback to absolute workspace path if called from another working directory
+		scriptPath = "/home/matei/Projects/Coalg/utils/hilite.me/run_python.bash"
+	}
+	cmd := exec.Command("/bin/sh", scriptPath, code)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
+		log.Printf("cmd.Run() failed with %s\n", err)
+		return "<pre><code>" + code + "</code></pre>"
 	}
 	return string(out)
 }
