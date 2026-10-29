@@ -1,4 +1,4 @@
-# Coalg - Backend Service
+# Coalg
 
 Coalg is a web application backend built with Go, backed by a MySQL/MariaDB relational database, and integrated with a Python/Pygments-based code syntax highlighting service. It manages educational modules, chapters, lessons, associated resources, and problem sets, along with user authentication and an administrative approval workflow.
 
